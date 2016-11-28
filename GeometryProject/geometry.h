@@ -1,3 +1,6 @@
+#ifndef GEOMETRY_H
+#define GEOMETRY
+
 enum EIntersections
 {
 	INTERSECTION_NONE,
@@ -146,3 +149,5 @@ TTriangle2& RotateTriangleAroundPoint(const TTriangle2& _krTriangle,
                                       const float _kfRotAngleInRadians,
                                       const TVector2& _krRotAroundPoint,
                                       TTriangle2& _rRotatedTriangle);
+
+#endif
