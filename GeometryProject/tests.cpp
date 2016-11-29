@@ -1,9 +1,11 @@
+#include <math.h>
+
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "geometry.h"
 
 TEST_CASE("Test Equality Function") {
-	REQUIRE( Equals(TVector3{ 1, 2, 3 }, TVector3{ 1, 2, 3 }) );
+	REQUIRE(Equals(TVector3{ 1, 2, 0.8f - 0.7f }, TVector3{ 1, 2, 0.1f }));
 	REQUIRE_FALSE( Equals(TVector3{ 1, 2, 3 }, TVector3{ 3, 2, 1 }) );
 
 	SECTION("Test Add Function")
