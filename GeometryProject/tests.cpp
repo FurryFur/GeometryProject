@@ -44,4 +44,18 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, TVector3{ 2, 10, 7 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
+
+	SECTION("Test Magnitude Function")
+	{
+		float fResultant;
+		float fReturnedVal = Magnitude(TVector3{ 1, 2, 3 });
+		REQUIRE(fResultant == Approx(sqrt(14)));
+	}
+
+	SECTION("Test Dot Product Function")
+	{
+		float fResultant;
+		float fReturnedVal = DotProduct(TVector3{ 2, 2, 2 }, TVector3{ 1, 2, 3 });
+		REQUIRE(fResultant == Approx(12));
+	}
 }
