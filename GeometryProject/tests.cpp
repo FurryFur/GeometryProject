@@ -92,4 +92,10 @@ TEST_CASE("Test Equality Function") {
 		float fReturnVal = ComputeDistancePointToLine(rTestline, { 4, 1, -2 });
 		REQUIRE(fReturnVal == Approx(sqrt(854)/14));
 	}
+
+	SECTION("Test Compute Distance Circle To Circle Function")
+	{
+		float fReturnVal = ComputeDistanceCircleToCircle(TCircle{ { 2, 5 }, 4 }, TCircle{ { -4, -6 }, 8 });
+		REQUIRE(fReturnVal == Approx(sqrt(157)));
+	}
 }
