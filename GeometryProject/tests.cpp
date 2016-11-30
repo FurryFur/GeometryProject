@@ -29,11 +29,19 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 
-	SECTION("Test scale Function")
+	SECTION("Test Scale Function")
 	{
 		TVector3 rResultant;
 		TVector3 rReturnedVal = ScaleVector(TVector3{ 1, 2, 3 }, 3, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 3, 6, 9}));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test CrossProduct Function")
+	{
+		TVector3 rResultant;
+		TVector3 rReturnedVal = CrossProduct(TVector3{ 3, 2, 2 }, TVector3{ 4, 5, 6 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 2, 10, 7 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 }
