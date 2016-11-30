@@ -81,8 +81,8 @@ TEST_CASE("Test Equality Function") {
 	SECTION("Test Projection Function")
 	{
 		TVector3 rResultant;
-		TVector3 rReturnedVal = Projection(TVector3{ 3, 1, 1 }, TVector3{ 1, 2, 1 }, rResultant);
-		REQUIRE(Equals(rResultant, TVector3{ sqrt(6), 2 * sqrt(6), sqrt(6) }));
+		TVector3 rReturnedVal = Projection(TVector3{ 1, 1, 0 }, TVector3{ 3, 0, 0 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0}));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 }
