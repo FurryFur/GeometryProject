@@ -86,11 +86,13 @@ TVector3& CrossProduct(const TVector3& _krA,
 	return _rResultant;
 }
 
+// -Seb
 TVector3& Normalise(const TVector3& _krA, TVector3& _rResultant)
 {
 	return _rResultant;
 }
 
+// -Jack
 TVector3& Projection(const TVector3& _krA,
 	const TVector3& _krB,
 	TVector3& _rResultant)
@@ -98,30 +100,35 @@ TVector3& Projection(const TVector3& _krA,
 	return _rResultant;
 }
 
+// -Lance
 float ComputeAngleBetween(const TVector2& _krA,
 	const TVector2& _krB)
 {
 	return 0;
 }
 
+// -Lance
 float ComputeAngleBetween(const TVector3& _krA,
 	const TVector3& _krB)
 {
 	return 0;
 }
 
+// -Jack
 float ComputeDistancePointToLine(const T3DLine& _krLine,
 	const TVector3& _krPoint)
 {
 	return 0;
 }
 
+// -Seb
 float ComputeDistancePointToPlane(const TPlane& _krPlane,
 	const TVector3& _krPoint)
 {
 	return 0;
 }
 
+// -Seb
 //Distance between point and center of the spheres
 float ComputeDistancePointToSphere(const TSphere& _krSphere,
 	const TVector3& _krPoint)
@@ -129,6 +136,7 @@ float ComputeDistancePointToSphere(const TSphere& _krSphere,
 	return 0;
 }
 
+// -Jack
 //Distance between center of the circles
 float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 	const TCircle& _krCircle2)
@@ -136,6 +144,7 @@ float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 	return 0;
 }
 
+// -Lance
 //Distance between center of the circle and triangle
 float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	const TTriangle2& _krTriangle)
@@ -143,6 +152,7 @@ float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	return 0;
 }
 
+// -Seb
 EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	const TSphere& _krSphere,
 	TVector3& _rv3IntersectionPoint1,
@@ -151,6 +161,7 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	return INTERSECTION_NONE;
 }
 
+// -Jack
 bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	const TPlane& _krPlane,
 	TVector3& _rv3IntersectionPoint)
@@ -158,12 +169,14 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	return false;
 }
 
+// -Jack
 bool IsIntersection(const T3DLine& _krLine1,
 	const T3DLine& _krLine2)
 {
 	return false;
 }
 
+// -Jack
 TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	const T3DLine& _krLine2,
 	TVector3& _rIntersectionPoint)
@@ -171,6 +184,7 @@ TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	return _rIntersectionPoint;
 }
 
+// -Seb
 bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	const TVector2& _krCameraDirection,
 	const float _kfFieldOfViewInRadians,
@@ -179,12 +193,14 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	return false;
 }
 
+// -Seb
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
 	return _rNormal;
 }
 
+// -Lance
 bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	const TVector3& _krLightSourcePosition,
 	const TTriangle3& _krSurface)
@@ -192,6 +208,7 @@ bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	return false;
 }
 
+// -Lance
 TTriangle2& RotateTriangleAroundPoint(const TTriangle2& _krTriangle,
 	const float _kfRotAngleInRadians,
 	const TVector2& _krRotAroundPoint,
