@@ -58,4 +58,12 @@ TEST_CASE("Test Equality Function") {
 		float fReturnedVal = DotProduct(TVector3{ 2, 2, 2 }, TVector3{ 1, 2, 3 });
 		REQUIRE(fResultant == Approx(12));
 	}
+
+	SECTION("Test Normalise Function")
+	{
+		TVector3 rResultant;
+		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
 }
