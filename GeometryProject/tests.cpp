@@ -85,4 +85,11 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0}));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
+
+	SECTION("Test Compute Distance Point To Line Function")
+	{
+		T3DLine rTestline{ { 1, 3, 4 } , { 1, -2, -3} };
+		float fReturnVal = ComputeDistancePointToLine(rTestline, { 4, 1, -2 });
+		REQUIRE(fReturnVal == Approx(sqrt(854)/14));
+	}
 }

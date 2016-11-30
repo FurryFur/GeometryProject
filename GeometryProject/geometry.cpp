@@ -132,7 +132,9 @@ float ComputeAngleBetween(const TVector3& _krA,
 float ComputeDistancePointToLine(const T3DLine& _krLine,
 	const TVector3& _krPoint)
 {
-	return 0;
+	TVector3 _rResultant1;
+	TVector3 _rPointtoLine = { (_krPoint.m_fX - _krLine.m_v3q.m_fX), (_krPoint.m_fY - _krLine.m_v3q.m_fY), (_krPoint.m_fZ - _krLine.m_v3q.m_fZ) };
+	return Magnitude(CrossProduct(_rPointtoLine, _krLine.m_v3v, _rResultant1)) / Magnitude(_krLine.m_v3v);
 }
 
 // -Seb
