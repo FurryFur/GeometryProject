@@ -3,6 +3,7 @@
 #include "geometry.h"
 #include "math.h"
 
+// -Lance
 bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = FLT_EPSILON, const float _fMaxPercentDiff = FLT_EPSILON)
 {
 	float fDiff = abs(_kfA - _kfB);
@@ -22,6 +23,7 @@ bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = 
 	}
 }
 
+// -Lance
 bool Equals(const TVector3& _krA, const TVector3& _krB)
 {
 	return AlmostEqual(_krA.m_fX, _krB.m_fX) && 
@@ -29,6 +31,7 @@ bool Equals(const TVector3& _krA, const TVector3& _krB)
 	       AlmostEqual(_krA.m_fZ, _krB.m_fZ);
 }
 
+// -Lance
 TVector3& Add(const TVector3& _krA,
               const TVector3& _krB,
               TVector3& _rResultant)
@@ -39,6 +42,7 @@ TVector3& Add(const TVector3& _krA,
 	return _rResultant;
 }
 
+// -Lance
 TVector3& Subtract(const TVector3& _krA,
                    const TVector3& _krB,
                    TVector3& _rResultant)
@@ -49,6 +53,7 @@ TVector3& Subtract(const TVector3& _krA,
 	return _rResultant;
 }
 
+// -Seb
 TVector3& ScaleVector(const TVector3& _krA,
 	const float _kfScalar,
 	TVector3& _rResultant)
@@ -59,16 +64,19 @@ TVector3& ScaleVector(const TVector3& _krA,
 	return _rResultant;
 }
 
+// -Jack
 float Magnitude(const TVector3& _krA)
 {
 	return sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2) + pow(_krA.m_fZ, 2));
 }
 
+// -Jack
 float DotProduct(const TVector3& _krA, const TVector3& _krB)
 {
 	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ + _krB.m_fZ));
 }
 
+// -Seb
 TVector3& CrossProduct(const TVector3& _krA,
 	const TVector3& _krB,
 	TVector3& _rResultant)
