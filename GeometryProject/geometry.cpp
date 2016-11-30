@@ -89,6 +89,10 @@ TVector3& CrossProduct(const TVector3& _krA,
 // -Seb
 TVector3& Normalise(const TVector3& _krA, TVector3& _rResultant)
 {
+	float fMag = Magnitude(_krA);
+	_rResultant.m_fX = _krA.m_fX / fMag;
+	_rResultant.m_fY = _krA.m_fY / fMag;
+	_rResultant.m_fZ = _krA.m_fZ / fMag;
 	return _rResultant;
 }
 

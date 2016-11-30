@@ -46,6 +46,28 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 
+	SECTION("Test Magnitude Function")
+	{
+		float fResultant;
+		float fReturnedVal = Magnitude(TVector3{ 1, 2, 3 });
+		REQUIRE(fResultant == Approx(sqrt(14)));
+	}
+
+	SECTION("Test Dot Product Function")
+	{
+		float fResultant;
+		float fReturnedVal = DotProduct(TVector3{ 2, 2, 2 }, TVector3{ 1, 2, 3 });
+		REQUIRE(fResultant == Approx(12));
+	}
+
+	SECTION("Test Normalise Function")
+	{
+		TVector3 rResultant;
+		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
 	SECTION("Test ComputeAngleBetween Function for 2D Vectors")
 	{
 		float fReturnVal = ComputeAngleBetween(TVector2{ 3.0f, 0 }, TVector2{ 0, 5.0f });
