@@ -1,7 +1,6 @@
 #include <math.h>
 #include <algorithm>
 #include "geometry.h"
-#include "math.h"
 
 bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = FLT_EPSILON, const float _fMaxPercentDiff = FLT_EPSILON)
 {
