@@ -23,4 +23,12 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, TVector3{ 0, 1, 2 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
+
+	SECTION("Test scale Function")
+	{
+		TVector3 rResultant;
+		TVector3 rReturnedVal = ScaleVector(TVector3{ 1, 2, 3 }, 3, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 3, 6, 9}));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
 }
