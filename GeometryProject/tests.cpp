@@ -44,4 +44,12 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, TVector3{ 2, 10, 7 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
+
+	SECTION("Test Normalise Function")
+	{
+		TVector3 rResultant;
+		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
 }
