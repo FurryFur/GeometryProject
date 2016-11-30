@@ -112,14 +112,20 @@ TVector3& Projection(const TVector3& _krA,
 float ComputeAngleBetween(const TVector2& _krA,
 	const TVector2& _krB)
 {
-	return 0;
+	float fADotB = _krA.m_fX * _krB.m_fX + _krA.m_fY * _krB.m_fY;
+	float fMagA = sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2));
+	float fMagB = sqrt(pow(_krB.m_fX, 2) + pow(_krB.m_fY, 2));
+	return acos(fADotB / ( fMagA * fMagB));
 }
 
 // -Lance
 float ComputeAngleBetween(const TVector3& _krA,
 	const TVector3& _krB)
 {
-	return 0;
+	float fADotB = _krA.m_fX * _krB.m_fX + _krA.m_fY * _krB.m_fY + _krA.m_fZ * _krB.m_fZ;
+	float fMagA = sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2) + pow(_krA.m_fZ, 2));
+	float fMagB = sqrt(pow(_krB.m_fX, 2) + pow(_krB.m_fY, 2) + pow(_krB.m_fZ, 2));
+	return acos(fADotB / (fMagA * fMagB));
 }
 
 // -Jack

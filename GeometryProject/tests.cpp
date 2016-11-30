@@ -1,5 +1,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iostream>
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
@@ -63,6 +64,18 @@ TEST_CASE("Test Equality Function") {
 		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test ComputeAngleBetween Function for 2D Vectors")
+	{
+		float fReturnVal = ComputeAngleBetween(TVector2{ 3.0f, 0 }, TVector2{ 0, 5.0f });
+		REQUIRE(fReturnVal == Approx(M_PI / 2));
+	}
+
+	SECTION("Test ComputeAngleBetween Function for 3D Vectors")
+	{
+		float fReturnVal = ComputeAngleBetween(TVector3{ 3.0f, 0, 0 }, TVector3{ 0, 5.0f, 0 });
+		REQUIRE(fReturnVal == Approx(M_PI / 2));
 	}
 
 	SECTION("Test Projection Function")
