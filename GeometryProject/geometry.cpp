@@ -1,4 +1,5 @@
 #include "geometry.h"
+#include "math.h"
 
 bool Equals(const TVector3& _krA, const TVector3& _krB)
 {
@@ -39,12 +40,12 @@ TVector3& ScaleVector(const TVector3& _krA,
 
 float Magnitude(const TVector3& _krA)
 {
-
+	return sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2) + pow(_krA.m_fZ, 2));
 }
 
 float DotProduct(const TVector3& _krA, const TVector3& _krB)
 {
-
+	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ + _krB.m_fZ));
 }
 
 TVector3& CrossProduct(const TVector3& _krA,
