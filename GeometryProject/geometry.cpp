@@ -59,6 +59,7 @@ TVector3& CrossProduct(const TVector3& _krA,
 
 TVector3& Normalise(const TVector3& _krA, TVector3& _rResultant)
 {
+	//float fMag = 
 	return _rResultant;
 }
 
