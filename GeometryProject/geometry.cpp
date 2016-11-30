@@ -163,7 +163,13 @@ float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	const TTriangle2& _krTriangle)
 {
-	return 0;
+	float fTriCentreX = (_krTriangle.m_v2p1.m_fX + _krTriangle.m_v2p2.m_fX + _krTriangle.m_v2p3.m_fX) / 3;
+	float fTriCentreY = (_krTriangle.m_v2p1.m_fY + _krTriangle.m_v2p2.m_fY + _krTriangle.m_v2p3.m_fY) / 3;
+	float fCircleCentreX = _krCircle.m_v2center.m_fX;
+	float fCircleCentreY = _krCircle.m_v2center.m_fY;
+	float fVDiffX = fTriCentreX - fCircleCentreX;
+	float fVDiffY = fTriCentreY - fCircleCentreY;
+	return sqrt(pow(fVDiffX, 2) + pow(fVDiffY, 2));
 }
 
 // -Seb
@@ -219,7 +225,19 @@ bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	const TVector3& _krLightSourcePosition,
 	const TTriangle3& _krSurface)
 {
-	return false;
+	// Get vector to light source
+	TVector3 v3VecToLight;
+	Subtract(_krLightSourcePosition, _krPointOnSurface, v3VecToLight);
+	
+	// Get surface normal vector (Counter Clockwise Winding)
+	TVector3 v3SurNormal;
+	TVector3 v3TriSide1;
+	TVector3 v3TriSide2;
+	Subtract(_krSurface.m_v3p2, _krSurface.m_v3p1, v3TriSide1);
+	Subtract(_krSurface.m_v3p3, _krSurface.m_v3p1, v3TriSide2);
+	CrossProduct(v3TriSide1, v3TriSide2, v3SurNormal);
+
+	return DotProduct(v3VecToLight, v3SurNormal) > 0;
 }
 
 // -Lance
