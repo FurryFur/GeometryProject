@@ -72,7 +72,7 @@ float Magnitude(const TVector3& _krA)
 // -Jack
 float DotProduct(const TVector3& _krA, const TVector3& _krB)
 {
-	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ + _krB.m_fZ));
+	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ * _krB.m_fZ));
 }
 
 // -Seb
@@ -101,6 +101,10 @@ TVector3& Projection(const TVector3& _krA,
 	const TVector3& _krB,
 	TVector3& _rResultant)
 {
+	float fProjMultpr = (DotProduct(_krA, _krB)) / (pow(Magnitude(_krB), 2));
+	_rResultant.m_fX = fProjMultpr * _krB.m_fX;
+	_rResultant.m_fY = fProjMultpr * _krB.m_fY;
+	_rResultant.m_fZ = fProjMultpr * _krB.m_fZ;
 	return _rResultant;
 }
 

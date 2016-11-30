@@ -47,16 +47,14 @@ TEST_CASE("Test Equality Function") {
 
 	SECTION("Test Magnitude Function")
 	{
-		float fResultant;
 		float fReturnedVal = Magnitude(TVector3{ 1, 2, 3 });
-		REQUIRE(fResultant == Approx(sqrt(14)));
+		REQUIRE(fReturnedVal == Approx(sqrt(14)));
 	}
 
 	SECTION("Test Dot Product Function")
 	{
-		float fResultant;
 		float fReturnedVal = DotProduct(TVector3{ 2, 2, 2 }, TVector3{ 1, 2, 3 });
-		REQUIRE(fResultant == Approx(12));
+		REQUIRE(fReturnedVal == Approx(12));
 	}
 
 	SECTION("Test Normalise Function")
@@ -64,6 +62,14 @@ TEST_CASE("Test Equality Function") {
 		TVector3 rResultant;
 		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test Projection Function")
+	{
+		TVector3 rResultant;
+		TVector3 rReturnedVal = Projection(TVector3{ 3, 1, 1 }, TVector3{ 1, 2, 1 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ sqrt(6), 2 * sqrt(6), sqrt(6) }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 }
