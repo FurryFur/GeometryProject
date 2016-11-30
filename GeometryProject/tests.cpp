@@ -1,5 +1,6 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iostream>
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
@@ -43,5 +44,17 @@ TEST_CASE("Test Equality Function") {
 		TVector3 rReturnedVal = CrossProduct(TVector3{ 3, 2, 2 }, TVector3{ 4, 5, 6 }, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 2, 10, 7 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test ComputeAngleBetween Function for 2D Vectors")
+	{
+		float fReturnVal = ComputeAngleBetween(TVector2{ 3.0f, 0 }, TVector2{ 0, 5.0f });
+		REQUIRE(fReturnVal == Approx(M_PI / 2));
+	}
+
+	SECTION("Test ComputeAngleBetween Function for 3D Vectors")
+	{
+		float fReturnVal = ComputeAngleBetween(TVector3{ 3.0f, 0, 0 }, TVector3{ 0, 5.0f, 0 });
+		REQUIRE(fReturnVal == Approx(M_PI / 2));
 	}
 }
