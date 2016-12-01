@@ -72,7 +72,7 @@ float Magnitude(const TVector3& _krA)
 // -Jack
 float DotProduct(const TVector3& _krA, const TVector3& _krB)
 {
-	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ + _krB.m_fZ));
+	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ * _krB.m_fZ));
 }
 
 // -Seb
@@ -101,6 +101,10 @@ TVector3& Projection(const TVector3& _krA,
 	const TVector3& _krB,
 	TVector3& _rResultant)
 {
+	float fProjMultpr = (DotProduct(_krA, _krB)) / (pow(Magnitude(_krB), 2));
+	_rResultant.m_fX = fProjMultpr * _krB.m_fX;
+	_rResultant.m_fY = fProjMultpr * _krB.m_fY;
+	_rResultant.m_fZ = fProjMultpr * _krB.m_fZ;
 	return _rResultant;
 }
 
@@ -108,21 +112,29 @@ TVector3& Projection(const TVector3& _krA,
 float ComputeAngleBetween(const TVector2& _krA,
 	const TVector2& _krB)
 {
-	return 0;
+	float fADotB = _krA.m_fX * _krB.m_fX + _krA.m_fY * _krB.m_fY;
+	float fMagA = sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2));
+	float fMagB = sqrt(pow(_krB.m_fX, 2) + pow(_krB.m_fY, 2));
+	return acos(fADotB / ( fMagA * fMagB));
 }
 
 // -Lance
 float ComputeAngleBetween(const TVector3& _krA,
 	const TVector3& _krB)
 {
-	return 0;
+	float fADotB = DotProduct(_krA, _krB);
+	float fMagA = Magnitude(_krA);
+	float fMagB = Magnitude(_krB);
+	return acos(fADotB / (fMagA * fMagB));
 }
 
 // -Jack
 float ComputeDistancePointToLine(const T3DLine& _krLine,
 	const TVector3& _krPoint)
 {
-	return 0;
+	TVector3 _rResultant;
+	TVector3 _rPointtoLine = { (_krPoint.m_fX - _krLine.m_v3q.m_fX), (_krPoint.m_fY - _krLine.m_v3q.m_fY), (_krPoint.m_fZ - _krLine.m_v3q.m_fZ) };
+	return Magnitude(CrossProduct(_rPointtoLine, _krLine.m_v3v, _rResultant)) / Magnitude(_krLine.m_v3v);
 }
 
 // -Seb
@@ -145,7 +157,7 @@ float ComputeDistancePointToSphere(const TSphere& _krSphere,
 float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 	const TCircle& _krCircle2)
 {
-	return 0;
+	return sqrt(pow((_krCircle1.m_v2center.m_fX - _krCircle2.m_v2center.m_fX), 2) + pow((_krCircle1.m_v2center.m_fY - _krCircle2.m_v2center.m_fY), 2));
 }
 
 // -Lance
@@ -153,7 +165,11 @@ float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	const TTriangle2& _krTriangle)
 {
-	return 0;
+	float fTriCentreX = (_krTriangle.m_v2p1.m_fX + _krTriangle.m_v2p2.m_fX + _krTriangle.m_v2p3.m_fX) / 3;
+	float fTriCentreY = (_krTriangle.m_v2p1.m_fY + _krTriangle.m_v2p2.m_fY + _krTriangle.m_v2p3.m_fY) / 3;
+	float fVDiffX = fTriCentreX - _krCircle.m_v2center.m_fX;
+	float fVDiffY = fTriCentreY - _krCircle.m_v2center.m_fY;
+	return sqrt(pow(fVDiffX, 2) + pow(fVDiffY, 2));
 }
 
 // -Seb
@@ -246,7 +262,12 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
-	return _rNormal;
+	// Get surface normal vector with Counter Clockwise Winding
+	TVector3 v3TriSide1;
+	TVector3 v3TriSide2;
+	Subtract(_krTriangle.m_v3p2, _krTriangle.m_v3p1, v3TriSide1);
+	Subtract(_krTriangle.m_v3p3, _krTriangle.m_v3p1, v3TriSide2);
+	return CrossProduct(v3TriSide1, v3TriSide2, _rNormal);
 }
 
 // -Lance
@@ -254,7 +275,15 @@ bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	const TVector3& _krLightSourcePosition,
 	const TTriangle3& _krSurface)
 {
-	return false;
+	// Get vector to light source
+	TVector3 v3VecToLight;
+	Subtract(_krLightSourcePosition, _krPointOnSurface, v3VecToLight);
+	
+	// Get surface normal vector (Counter Clockwise Winding)
+	TVector3 v3SurNormal;
+	FindTriangleNormal(_krSurface, v3SurNormal);
+
+	return DotProduct(v3VecToLight, v3SurNormal) > 0;
 }
 
 // -Lance
