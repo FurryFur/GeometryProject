@@ -164,14 +164,15 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 {
 	float fT1;
 	float fT2;
-	float fA = _krLine.m_v3v.m_fX + _krLine.m_v3v.m_fY + _krLine.m_v3v.m_fZ;
+	TVector3 Normalized = Normalise(_krLine.m_v3v, Normalized);
+	float fA = (_krLine.m_v3v.m_fX * _krLine.m_v3v.m_fX) + (_krLine.m_v3v.m_fY *_krLine.m_v3v.m_fY) + (_krLine.m_v3v.m_fZ*_krLine.m_v3v.m_fZ);
 
 	float fB = (2 * _krLine.m_v3v.m_fX * _krLine.m_v3q.m_fX) - (2 * _krLine.m_v3v.m_fX * _krSphere.m_v3center.m_fX) +
 		(2 * _krLine.m_v3v.m_fY * _krLine.m_v3q.m_fY) - (2 * _krLine.m_v3v.m_fY * _krSphere.m_v3center.m_fY) + 
 		(2 * _krLine.m_v3v.m_fZ * _krLine.m_v3q.m_fZ) - (2 * _krLine.m_v3v.m_fZ * _krSphere.m_v3center.m_fZ);
 
-	float fC = (_krLine.m_v3q.m_fX * _krLine.m_v3q.m_fX) + (_krSphere.m_v3center.m_fX * _krSphere.m_v3center.m_fX) - (2 * _krLine.m_v3q.m_fX * _krSphere.m_v3center.m_fX)
-		(_krLine.m_v3q.m_fY * _krLine.m_v3q.m_fY) + (_krSphere.m_v3center.m_fY * _krSphere.m_v3center.m_fY) - (2 * _krLine.m_v3q.m_fY * _krSphere.m_v3center.m_fY)
+	float fC = (_krLine.m_v3q.m_fX * _krLine.m_v3q.m_fX) + (_krSphere.m_v3center.m_fX * _krSphere.m_v3center.m_fX) - (2 * _krLine.m_v3q.m_fX * _krSphere.m_v3center.m_fX)+
+		(_krLine.m_v3q.m_fY * _krLine.m_v3q.m_fY) + (_krSphere.m_v3center.m_fY * _krSphere.m_v3center.m_fY) - (2 * _krLine.m_v3q.m_fY * _krSphere.m_v3center.m_fY)+
 		(_krLine.m_v3q.m_fZ * _krLine.m_v3q.m_fZ) + (_krSphere.m_v3center.m_fZ * _krSphere.m_v3center.m_fZ) - (2 * _krLine.m_v3q.m_fZ * _krSphere.m_v3center.m_fZ)
 		- (_krSphere.m_fRadius * _krSphere.m_fRadius);
 
@@ -182,7 +183,7 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	}
 
 	// If there is one intersection (discriminant is 0)
-	if ((fB * fB) - (4 * fA * fC) == 0)
+	if (AlmostEqual((fB * fB) - (4 * fA * fC), 0))
 	{
 		fT1 = -fB / (2 * fA);
 
@@ -195,16 +196,16 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 		return INTERSECTION_ONE;
 	}
 
-	fT1 = (-fB / (2 * fA)) + ((fB * fB) - ((4 * fA * fC) / (2 * fA)));
-	fT2 = (-fB / (2 * fA)) - ((fB * fB) - ((4 * fA * fC) / (2 * fA)));
+	fT1 = (-fB / (2 * fA)) + sqrt((fB * fB) - ((4 * fA * fC))) / (2 * fA);
+	fT2 = (-fB / (2 * fA)) - sqrt((fB * fB) - ((4 * fA * fC))) / (2 * fA);
 
 	_rv3IntersectionPoint1.m_fX = (_krLine.m_v3v.m_fX * fT1) + _krLine.m_v3q.m_fX;
 	_rv3IntersectionPoint1.m_fY = (_krLine.m_v3v.m_fY * fT1) + _krLine.m_v3q.m_fY;
 	_rv3IntersectionPoint1.m_fZ = (_krLine.m_v3v.m_fZ * fT1) + _krLine.m_v3q.m_fZ;
 
-	_rv3IntersectionPoint2.m_fX = (_krLine.m_v3v.m_fX * fT1) + _krLine.m_v3q.m_fX;
-	_rv3IntersectionPoint2.m_fY = (_krLine.m_v3v.m_fY * fT1) + _krLine.m_v3q.m_fY;
-	_rv3IntersectionPoint2.m_fZ = (_krLine.m_v3v.m_fZ * fT1) + _krLine.m_v3q.m_fZ;
+	_rv3IntersectionPoint2.m_fX = (_krLine.m_v3v.m_fX * fT2) + _krLine.m_v3q.m_fX;
+	_rv3IntersectionPoint2.m_fY = (_krLine.m_v3v.m_fY * fT2) + _krLine.m_v3q.m_fY;
+	_rv3IntersectionPoint2.m_fZ = (_krLine.m_v3v.m_fZ * fT2) + _krLine.m_v3q.m_fZ;
 
 	return INTERSECTION_TWO;
 }
