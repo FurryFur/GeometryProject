@@ -81,9 +81,22 @@ TEST_CASE("Test Equality Function") {
 	SECTION("Test Projection Function")
 	{
 		TVector3 rResultant;
-		TVector3 rReturnedVal = Projection(TVector3{ 3, 1, 1 }, TVector3{ 1, 2, 1 }, rResultant);
-		REQUIRE(Equals(rResultant, TVector3{ sqrt(6), 2 * sqrt(6), sqrt(6) }));
+		TVector3 rReturnedVal = Projection(TVector3{ 1, 1, 0 }, TVector3{ 3, 0, 0 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0}));
 		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test Compute Distance Point To Line Function")
+	{
+		T3DLine rTestline{ { 1, 3, 4 } , { 1, -2, -3} };
+		float fReturnVal = ComputeDistancePointToLine(rTestline, { 4, 1, -2 });
+		REQUIRE(fReturnVal == Approx(sqrt(854)/14));
+	}
+
+	SECTION("Test Compute Distance Circle To Circle Function")
+	{
+		float fReturnVal = ComputeDistanceCircleToCircle(TCircle{ { 2, 5 }, 4 }, TCircle{ { -4, -6 }, 8 });
+		REQUIRE(fReturnVal == Approx(sqrt(157)));
 	}
 
 	SECTION("Test ComputeDistanceCircleToTriangle Function in 2D")

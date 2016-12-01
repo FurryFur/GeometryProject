@@ -132,7 +132,9 @@ float ComputeAngleBetween(const TVector3& _krA,
 float ComputeDistancePointToLine(const T3DLine& _krLine,
 	const TVector3& _krPoint)
 {
-	return 0;
+	TVector3 _rResultant;
+	TVector3 _rPointtoLine = { (_krPoint.m_fX - _krLine.m_v3q.m_fX), (_krPoint.m_fY - _krLine.m_v3q.m_fY), (_krPoint.m_fZ - _krLine.m_v3q.m_fZ) };
+	return Magnitude(CrossProduct(_rPointtoLine, _krLine.m_v3v, _rResultant)) / Magnitude(_krLine.m_v3v);
 }
 
 // -Seb
@@ -155,7 +157,7 @@ float ComputeDistancePointToSphere(const TSphere& _krSphere,
 float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 	const TCircle& _krCircle2)
 {
-	return 0;
+	return sqrt(pow((_krCircle1.m_v2center.m_fX - _krCircle2.m_v2center.m_fX), 2) + pow((_krCircle1.m_v2center.m_fY - _krCircle2.m_v2center.m_fY), 2));
 }
 
 // -Lance
