@@ -282,7 +282,23 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	const TPlane& _krPlane,
 	TVector3& _rv3IntersectionPoint)
 {
-	return false;
+	if (DotProduct(_krPlane.m_v3normal, _krLine.m_v3v) == 0)
+	{
+		return false;
+	}
+	else{
+		float _krPlaneD = DotProduct(_krPlane.m_v3normal, _krPlane.m_v3point);
+		float _fTValue = (-(_krPlaneD + _krPlane.m_v3normal.m_fX * _krLine.m_v3q.m_fX + _krPlane.m_v3normal.m_fY * _krLine.m_v3q.m_fY + _krPlane.m_v3normal.m_fZ * _krLine.m_v3q.m_fZ)) / DotProduct(_krPlane.m_v3normal, _krLine.m_v3v);
+		_rv3IntersectionPoint.m_fX = _krLine.m_v3q.m_fX + _fTValue * _krLine.m_v3v.m_fX;
+		_rv3IntersectionPoint.m_fY = _krLine.m_v3q.m_fY + _fTValue * _krLine.m_v3v.m_fY;
+		_rv3IntersectionPoint.m_fZ = _krLine.m_v3q.m_fZ + _fTValue * _krLine.m_v3v.m_fZ;
+		if (_fTValue >= 0 && _fTValue <= 1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }
 
 // -Jack

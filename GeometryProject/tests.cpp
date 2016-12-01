@@ -181,4 +181,11 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		float fValue = ComputeDistancePointToSphere(sSphere, v3Point);
 		REQUIRE(fValue == Approx(4.0f));
 	}
+
+	SECTION("Test Compute Is Line Plane Intersection Function")
+	{
+		TVector3 _rv3IntersectionPoint;
+		bool fReturnVal = IsLinePlaneIntersection(T3DLine{ { 1, 0, 1, }, { 3, -2, 1 } }, TPlane{ { 1, 1, 1, }, { -3, -2, -1 } }, _rv3IntersectionPoint);
+		REQUIRE(fReturnVal == true);
+	}
 }
