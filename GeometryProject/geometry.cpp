@@ -198,7 +198,9 @@ float ComputeDistancePointToPlane(const TPlane& _krPlane,
 float ComputeDistancePointToSphere(const TSphere& _krSphere,
 	const TVector3& _krPoint)
 {
-	return 0;
+	return sqrt((_krSphere.m_v3center.m_fX - _krPoint.m_fX) * (_krSphere.m_v3center.m_fX - _krPoint.m_fX) + 
+		(_krSphere.m_v3center.m_fY - _krPoint.m_fY) * (_krSphere.m_v3center.m_fY - _krPoint.m_fY) + 
+		(_krSphere.m_v3center.m_fZ - _krPoint.m_fZ) * (_krSphere.m_v3center.m_fZ - _krPoint.m_fZ));
 }
 
 // -Jack
