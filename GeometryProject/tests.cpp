@@ -87,6 +87,17 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
+	}*/
+
+	SECTION("Test ComputeLineSphereIntersection Function")
+	{
+		TVector3 rIntersectionPoint1;
+		TVector3 rIntersectionPoint2;
+		EIntersections rReturnedVal = ComputeLineSphereIntersection(T3DLine{ TVector3{ 0, 1, 0 }, TVector3{ 3, 0, 0 } }, TSphere{ TVector3{ 0, 1, 0 }, 2 }, 
+			rIntersectionPoint1, rIntersectionPoint2);
+		REQUIRE(Equals(rIntersectionPoint1, TVector3{ 2, 1, 0 }));
+		REQUIRE(Equals(rIntersectionPoint2, TVector3{ -2, 1, 0 }));
+		//REQUIRE(Equals(rReturnedVal, INTERSECTION_TWO));
 	}
 
 	SECTION("Test ComputeAngleBetween Function for 2D Vectors")
@@ -142,6 +153,14 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		TTriangle3 t3Surface{ { 1, -1, 0 }, { 0, 2, 0 }, { -1, -1, 0 } };
 		REQUIRE(IsSurfaceLit(v3PointOnSurface, v3LightSourcePosition, t3Surface));
 		REQUIRE_FALSE(IsSurfaceLit(v3PointOnSurface, { 1, 1, -1 }, t3Surface));
+	}
+
+	SECTION("Test IsInFieldOfView Function")
+	{
+		TVector2 v2CameraDirection{ -1, -1 };
+		TVector2 v2CameraPosition{ 2, 2 };
+		TVector2 v2ObjectPosition{ 1, 1 };
+		REQUIRE(IsInFieldOfView(v2CameraPosition, v2CameraDirection, 3.14, v2ObjectPosition));
 	}
 
 	SECTION("Test RotateTriangleAroundPoint (2D)")

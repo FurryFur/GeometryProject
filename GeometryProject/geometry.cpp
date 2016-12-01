@@ -227,7 +227,52 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	TVector3& _rv3IntersectionPoint1,
 	TVector3& _rv3IntersectionPoint2)
 {
-	return INTERSECTION_NONE;
+	float fT1;
+	float fT2;
+	TVector3 Normalized = Normalise(_krLine.m_v3v, Normalized);
+	float fA = (_krLine.m_v3v.m_fX * _krLine.m_v3v.m_fX) + (_krLine.m_v3v.m_fY *_krLine.m_v3v.m_fY) + (_krLine.m_v3v.m_fZ*_krLine.m_v3v.m_fZ);
+
+	float fB = (2 * _krLine.m_v3v.m_fX * _krLine.m_v3q.m_fX) - (2 * _krLine.m_v3v.m_fX * _krSphere.m_v3center.m_fX) +
+		(2 * _krLine.m_v3v.m_fY * _krLine.m_v3q.m_fY) - (2 * _krLine.m_v3v.m_fY * _krSphere.m_v3center.m_fY) + 
+		(2 * _krLine.m_v3v.m_fZ * _krLine.m_v3q.m_fZ) - (2 * _krLine.m_v3v.m_fZ * _krSphere.m_v3center.m_fZ);
+
+	float fC = (_krLine.m_v3q.m_fX * _krLine.m_v3q.m_fX) + (_krSphere.m_v3center.m_fX * _krSphere.m_v3center.m_fX) - (2 * _krLine.m_v3q.m_fX * _krSphere.m_v3center.m_fX)+
+		(_krLine.m_v3q.m_fY * _krLine.m_v3q.m_fY) + (_krSphere.m_v3center.m_fY * _krSphere.m_v3center.m_fY) - (2 * _krLine.m_v3q.m_fY * _krSphere.m_v3center.m_fY)+
+		(_krLine.m_v3q.m_fZ * _krLine.m_v3q.m_fZ) + (_krSphere.m_v3center.m_fZ * _krSphere.m_v3center.m_fZ) - (2 * _krLine.m_v3q.m_fZ * _krSphere.m_v3center.m_fZ)
+		- (_krSphere.m_fRadius * _krSphere.m_fRadius);
+
+	// If the discriminant is negative
+	if ((fB * fB) - (4 * fA * fC) < 0)
+	{
+		return INTERSECTION_NONE;
+	}
+
+	// If there is one intersection (discriminant is 0)
+	if (AlmostEqual((fB * fB) - (4 * fA * fC), 0))
+	{
+		fT1 = -fB / (2 * fA);
+
+		_rv3IntersectionPoint1.m_fX = (_krLine.m_v3v.m_fX * fT1) + _krLine.m_v3q.m_fX;
+		_rv3IntersectionPoint1.m_fY = (_krLine.m_v3v.m_fY * fT1) + _krLine.m_v3q.m_fY;
+		_rv3IntersectionPoint1.m_fZ = (_krLine.m_v3v.m_fZ * fT1) + _krLine.m_v3q.m_fZ;
+
+		_rv3IntersectionPoint1 = _rv3IntersectionPoint2;
+
+		return INTERSECTION_ONE;
+	}
+
+	fT1 = (-fB / (2 * fA)) + sqrt((fB * fB) - ((4 * fA * fC))) / (2 * fA);
+	fT2 = (-fB / (2 * fA)) - sqrt((fB * fB) - ((4 * fA * fC))) / (2 * fA);
+
+	_rv3IntersectionPoint1.m_fX = (_krLine.m_v3v.m_fX * fT1) + _krLine.m_v3q.m_fX;
+	_rv3IntersectionPoint1.m_fY = (_krLine.m_v3v.m_fY * fT1) + _krLine.m_v3q.m_fY;
+	_rv3IntersectionPoint1.m_fZ = (_krLine.m_v3v.m_fZ * fT1) + _krLine.m_v3q.m_fZ;
+
+	_rv3IntersectionPoint2.m_fX = (_krLine.m_v3v.m_fX * fT2) + _krLine.m_v3q.m_fX;
+	_rv3IntersectionPoint2.m_fY = (_krLine.m_v3v.m_fY * fT2) + _krLine.m_v3q.m_fY;
+	_rv3IntersectionPoint2.m_fZ = (_krLine.m_v3v.m_fZ * fT2) + _krLine.m_v3q.m_fZ;
+
+	return INTERSECTION_TWO;
 }
 
 // -Jack
@@ -259,10 +304,22 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	const float _kfFieldOfViewInRadians,
 	const TVector2& _krObjectPosition)
 {
-	return false;
+	float fObjectThetaInRadians = atan2((_krObjectPosition.m_fY - _krCameraPosition.m_fY), (_krObjectPosition.m_fX - _krCameraPosition.m_fX));
+	float fCameraDirectionInRadians = atan2(_krCameraDirection.m_fY, _krCameraDirection.m_fX);
+
+	if (fObjectThetaInRadians >= (fCameraDirectionInRadians + _kfFieldOfViewInRadians / 2))
+	{
+		return false;
+	}
+	else if (fObjectThetaInRadians <= fCameraDirectionInRadians - (_kfFieldOfViewInRadians / 2))
+	{
+		return false;
+	}
+
+	return true;
 }
 
-// -Seb
+// -Lance
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
