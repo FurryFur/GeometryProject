@@ -2,17 +2,40 @@
 #include <algorithm>
 #include "geometry.h"
 
-// -Lance
-bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = FLT_EPSILON, const float _fMaxPercentDiff = FLT_EPSILON)
+#include <stdint.h> // For int32_t, etc.
+
+// Reference: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
+union Float_t
 {
+	Float_t(float num = 0.0f) : f(num) {}
+	// Portable extraction of components.
+	bool Negative() const { return i < 0; }
+
+	int32_t i;
+	float f;
+};
+
+// -Lance
+// Reference: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
+bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = std::numeric_limits<float>::epsilon() * 10, const int _iMaxULPs = 1)
+{
+	// When comparing numbers near zero
 	float fDiff = abs(_kfA - _kfB);
 	if (fDiff <= _fMaxAbsDiff)
 	{
 		return true;
 	}
 
-	float fPercentDiff = fDiff / std::max<float>(_kfA, _kfB);
-	if (fPercentDiff <= _fMaxPercentDiff)
+	Float_t uA(_kfA);
+	Float_t uB(_kfB);
+
+	if (uA.Negative() != uB.Negative())
+	{
+		return false;
+	}
+
+	int iULPsDiff = abs(uA.i - uB.i);
+	if (iULPsDiff <= _iMaxULPs)
 	{
 		return true;
 	}
@@ -30,6 +53,12 @@ bool Equals(const TVector3& _krA, const TVector3& _krB)
 	       AlmostEqual(_krA.m_fZ, _krB.m_fZ);
 }
 
+bool Equals(const TVector2& _krA, const TVector2& _krB)
+{
+	return AlmostEqual(_krA.m_fX, _krB.m_fX) &&
+           AlmostEqual(_krA.m_fY, _krB.m_fY);
+}
+
 // -Lance
 TVector3& Add(const TVector3& _krA,
               const TVector3& _krB,
@@ -42,6 +71,16 @@ TVector3& Add(const TVector3& _krA,
 }
 
 // -Lance
+TVector2& Add(const TVector2& _krA,
+              const TVector2& _krB,
+              TVector2& _rResultant)
+{
+	_rResultant.m_fX = _krA.m_fX + _krB.m_fX;
+	_rResultant.m_fY = _krA.m_fY + _krB.m_fY;
+	return _rResultant;
+}
+
+// -Lance
 TVector3& Subtract(const TVector3& _krA,
                    const TVector3& _krB,
                    TVector3& _rResultant)
@@ -49,6 +88,16 @@ TVector3& Subtract(const TVector3& _krA,
 	_rResultant.m_fX = _krA.m_fX - _krB.m_fX;
 	_rResultant.m_fY = _krA.m_fY - _krB.m_fY;
 	_rResultant.m_fZ = _krA.m_fZ - _krB.m_fZ;
+	return _rResultant;
+}
+
+// -Lance
+TVector2& Subtract(const TVector2& _krA,
+	const TVector2& _krB,
+	TVector2& _rResultant)
+{
+	_rResultant.m_fX = _krA.m_fX - _krB.m_fX;
+	_rResultant.m_fY = _krA.m_fY - _krB.m_fY;
 	return _rResultant;
 }
 
@@ -247,5 +296,29 @@ TTriangle2& RotateTriangleAroundPoint(const TTriangle2& _krTriangle,
 	const TVector2& _krRotAroundPoint,
 	TTriangle2& _rRotatedTriangle)
 {
+	// Translate triange so that the rotation point is at origin
+	Subtract(_krTriangle.m_v2p1, _krRotAroundPoint, _rRotatedTriangle.m_v2p1);
+	Subtract(_krTriangle.m_v2p2, _krRotAroundPoint, _rRotatedTriangle.m_v2p2);
+	Subtract(_krTriangle.m_v2p3, _krRotAroundPoint, _rRotatedTriangle.m_v2p3);
+
+	// Rotate coordinate system
+	TVector2 v2I{ 1, 0 };
+	TVector2 v2J{ 0, 1 };
+	TVector2 v2IPrime{ v2I.m_fX * cos(_kfRotAngleInRadians), v2I.m_fX * sin(_kfRotAngleInRadians) };
+	TVector2 v2JPrime{ -v2J.m_fY * sin(_kfRotAngleInRadians), v2J.m_fY * cos(_kfRotAngleInRadians) };
+
+	// Place triangle points in new coordinate system
+	_rRotatedTriangle.m_v2p1.m_fX = _rRotatedTriangle.m_v2p1.m_fX * v2IPrime.m_fX + _rRotatedTriangle.m_v2p1.m_fY * v2JPrime.m_fX;
+	_rRotatedTriangle.m_v2p1.m_fY = _rRotatedTriangle.m_v2p1.m_fX * v2IPrime.m_fY + _rRotatedTriangle.m_v2p1.m_fY * v2JPrime.m_fY;
+	_rRotatedTriangle.m_v2p2.m_fX = _rRotatedTriangle.m_v2p2.m_fX * v2IPrime.m_fX + _rRotatedTriangle.m_v2p2.m_fY * v2JPrime.m_fX;
+	_rRotatedTriangle.m_v2p2.m_fY = _rRotatedTriangle.m_v2p2.m_fX * v2IPrime.m_fY + _rRotatedTriangle.m_v2p2.m_fY * v2JPrime.m_fY;
+	_rRotatedTriangle.m_v2p3.m_fX = _rRotatedTriangle.m_v2p3.m_fX * v2IPrime.m_fX + _rRotatedTriangle.m_v2p3.m_fY * v2JPrime.m_fX;
+	_rRotatedTriangle.m_v2p3.m_fY = _rRotatedTriangle.m_v2p3.m_fX * v2IPrime.m_fY + _rRotatedTriangle.m_v2p3.m_fY * v2JPrime.m_fY;
+
+	// Translate triangle such that the rotation point is restored to its original position
+	Add(_rRotatedTriangle.m_v2p1, _krRotAroundPoint, _rRotatedTriangle.m_v2p1);
+	Add(_rRotatedTriangle.m_v2p2, _krRotAroundPoint, _rRotatedTriangle.m_v2p2);
+	Add(_rRotatedTriangle.m_v2p3, _krRotAroundPoint, _rRotatedTriangle.m_v2p3);
+
 	return _rRotatedTriangle;
 }

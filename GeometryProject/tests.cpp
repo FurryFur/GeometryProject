@@ -6,7 +6,7 @@
 #include "catch.hpp"
 #include "geometry.h"
 
-TEST_CASE("Test Equality Function") {
+TEST_CASE("Test Equality Functions for both 2D and 3D") {
 	REQUIRE(Equals(TVector3{ 1, 2, 0.8f - 0.7f }, TVector3{ 1, 2, 0.1f }));
 	REQUIRE(Equals(TVector3{ 1, 2, sin(M_PI) }, TVector3{ 1, 2, 0 }));
 	REQUIRE_FALSE( Equals(TVector3{ 1, 2, 3 }, TVector3{ 3, 2, 1 }) );
@@ -14,7 +14,14 @@ TEST_CASE("Test Equality Function") {
 	REQUIRE(Equals(TVector3{ 1000000, 2, 2 }, TVector3{ 999992 + 8, 2, 2 }));
 	REQUIRE_FALSE(Equals(TVector3{ 1000000, 2, 2 }, TVector3{ 999992 + 8.1, 2, 2 }));
 
-	SECTION("Test Add Function")
+	REQUIRE(Equals(TVector2{ 1, 0.8f - 0.7f }, TVector2{ 1, 0.1f }));
+	REQUIRE(Equals(TVector2{ 1, sin(M_PI) }, TVector2{ 1, 0 }));
+	REQUIRE_FALSE(Equals(TVector2{ 1, 3 }, TVector2{ 3, 1 }));
+	REQUIRE_FALSE(Equals(TVector2{ 1, sin(M_PI + 0.00001f) }, TVector2{ 1, sin(M_PI) }));
+	REQUIRE(Equals(TVector2{ 1000000, 2 }, TVector2{ 999992 + 8, 2 }));
+	REQUIRE_FALSE(Equals(TVector2{ 1000000, 2 }, TVector2{ 999992 + 8.1, 2 }));
+
+	SECTION("Test Add Function in 3D")
 	{
 		TVector3 rResultant;
 		TVector3 rReturnedVal = Add(TVector3{ 1, 1, 1 }, TVector3{ 1, 2, 3 }, rResultant);
@@ -22,11 +29,27 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 
-	SECTION("Test Subtract Function")
+	SECTION("Test Add Function in 2D")
+	{
+		TVector2 rResultant;
+		TVector2 rReturnedVal = Add(TVector2{ 1, 1}, TVector2{ 1, 2 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector2{ 2, 3 }));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test Subtract Function in 3D")
 	{
 		TVector3 rResultant;
 		TVector3 rReturnedVal = Subtract(TVector3{ 1, 2, 3 }, TVector3{ 1, 1, 1 }, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 0, 1, 2 }));
+		REQUIRE(Equals(rResultant, rReturnedVal));
+	}
+
+	SECTION("Test Subtract Function in 2D")
+	{
+		TVector2 rResultant;
+		TVector2 rReturnedVal = Subtract(TVector2{ 1, 2 }, TVector2{ 1, 1 }, rResultant);
+		REQUIRE(Equals(rResultant, TVector2{ 0, 1 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
 	}
 
@@ -119,5 +142,17 @@ TEST_CASE("Test Equality Function") {
 		TTriangle3 t3Surface{ { 1, -1, 0 }, { 0, 2, 0 }, { -1, -1, 0 } };
 		REQUIRE(IsSurfaceLit(v3PointOnSurface, v3LightSourcePosition, t3Surface));
 		REQUIRE_FALSE(IsSurfaceLit(v3PointOnSurface, { 1, 1, -1 }, t3Surface));
+	}
+
+	SECTION("Test RotateTriangleAroundPoint (2D)")
+	{
+		TTriangle2 t2TriToRotate{ { 1, 0 }, { 2, 1 }, { 3, 0 } };
+		float fRotAngle = M_PI;
+		TVector2 v2RotPoint{ 1, 0 };
+		TTriangle2 t2RotatedTri;
+		RotateTriangleAroundPoint(t2TriToRotate, fRotAngle, v2RotPoint, t2RotatedTri);
+		REQUIRE(Equals(t2RotatedTri.m_v2p1, { 1, 0 }));
+		REQUIRE(Equals(t2RotatedTri.m_v2p2, { 0, -1 }));
+		REQUIRE(Equals(t2RotatedTri.m_v2p3, { -1, 0 }));
 	}
 }
