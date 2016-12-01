@@ -177,8 +177,10 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 
 	SECTION("Test Compute Is Line Plane Intersection Function")
 	{
-		TVector3 _rv3IntersectionPoint;
-		bool fReturnVal = IsLinePlaneIntersection(T3DLine{ { 1, 0, 1, }, { 3, -2, 1 } }, TPlane{ { 1, 1, 1, }, { -3, -2, -1 } }, _rv3IntersectionPoint);
+		TVector3 v3IntersectionPoint;
+		bool fReturnVal = IsLinePlaneIntersection(T3DLine{ { 0, -1, 0, }, { 0, 1, 0 } }, TPlane{ { 0, 1, 0, }, { 1, 0, 0 } }, v3IntersectionPoint);
+		bool fReturnVal2 = IsLinePlaneIntersection(T3DLine{ { 0, -1, 0, }, { 1, 0, 0 } }, TPlane{ { 0, 1, 0, }, { 1, 0, 0 } }, v3IntersectionPoint);
 		REQUIRE(fReturnVal == true);
+		REQUIRE(fReturnVal2 == false);
 	}
 }
