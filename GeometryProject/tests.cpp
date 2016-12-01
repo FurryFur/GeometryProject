@@ -131,4 +131,12 @@ TEST_CASE("Test Equality Function") {
 		REQUIRE(IsSurfaceLit(v3PointOnSurface, v3LightSourcePosition, t3Surface));
 		REQUIRE_FALSE(IsSurfaceLit(v3PointOnSurface, { 1, 1, -1 }, t3Surface));
 	}
+
+	SECTION("Test IsInFieldOfView Function")
+	{
+		TVector2 v2CameraDirection{ -1, -1 };
+		TVector2 v2CameraPosition{ 2, 2 };
+		TVector2 v2ObjectPosition{ 1, 1 };
+		REQUIRE(IsInFieldOfView(v2CameraPosition, v2CameraDirection, 3.14, v2ObjectPosition));
+	}
 }

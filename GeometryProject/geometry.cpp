@@ -255,10 +255,22 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	const float _kfFieldOfViewInRadians,
 	const TVector2& _krObjectPosition)
 {
-	return false;
+	float fObjectThetaInRadians = atan2((_krObjectPosition.m_fY - _krCameraPosition.m_fY), (_krObjectPosition.m_fX - _krCameraPosition.m_fX));
+	float fCameraDirectionInRadians = atan2(_krCameraDirection.m_fY, _krCameraDirection.m_fX);
+
+	if (fObjectThetaInRadians >= (fCameraDirectionInRadians + _kfFieldOfViewInRadians / 2))
+	{
+		return false;
+	}
+	else if (fObjectThetaInRadians <= fCameraDirectionInRadians - (_kfFieldOfViewInRadians / 2))
+	{
+		return false;
+	}
+
+	return true;
 }
 
-// -Seb
+// -Lance
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
