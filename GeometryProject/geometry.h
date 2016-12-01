@@ -67,13 +67,23 @@ struct TSphere
 
 bool Equals(const TVector3& _krA, const TVector3& _krB);
 
+bool Equals(const TVector2& _krA, const TVector2& _krB);
+
 TVector3& Add(const TVector3& _krA,
               const TVector3& _krB,
               TVector3& _rResultant);
 
+TVector2& Add(const TVector2& _krA,
+              const TVector2& _krB,
+              TVector2& _rResultant);
+
 TVector3& Subtract(const TVector3& _krA,
                    const TVector3& _krB,
                    TVector3& _rResultant);
+
+TVector2& Subtract(const TVector2& _krA,
+                   const TVector2& _krB,
+                   TVector2& _rResultant);
 
 TVector3& ScaleVector(const TVector3& _krA,
                       const float _kfScalar,

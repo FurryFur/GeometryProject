@@ -2,17 +2,40 @@
 #include <algorithm>
 #include "geometry.h"
 
-// -Lance
-bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = FLT_EPSILON, const float _fMaxPercentDiff = FLT_EPSILON)
+#include <stdint.h> // For int32_t, etc.
+
+// Reference: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
+union Float_t
 {
+	Float_t(float num = 0.0f) : f(num) {}
+	// Portable extraction of components.
+	bool Negative() const { return i < 0; }
+
+	int32_t i;
+	float f;
+};
+
+// -Lance
+// Reference: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
+bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = std::numeric_limits<float>::epsilon() * 10, const int _iMaxULPs = 1)
+{
+	// When comparing numbers near zero
 	float fDiff = abs(_kfA - _kfB);
 	if (fDiff <= _fMaxAbsDiff)
 	{
 		return true;
 	}
 
-	float fPercentDiff = fDiff / std::max<float>(_kfA, _kfB);
-	if (fPercentDiff <= _fMaxPercentDiff)
+	Float_t uA(_kfA);
+	Float_t uB(_kfB);
+
+	if (uA.Negative() != uB.Negative())
+	{
+		return false;
+	}
+
+	int iULPsDiff = abs(uA.i - uB.i);
+	if (iULPsDiff <= _iMaxULPs)
 	{
 		return true;
 	}
@@ -30,6 +53,12 @@ bool Equals(const TVector3& _krA, const TVector3& _krB)
 	       AlmostEqual(_krA.m_fZ, _krB.m_fZ);
 }
 
+bool Equals(const TVector2& _krA, const TVector2& _krB)
+{
+	return AlmostEqual(_krA.m_fX, _krB.m_fX) &&
+           AlmostEqual(_krA.m_fY, _krB.m_fY);
+}
+
 // -Lance
 TVector3& Add(const TVector3& _krA,
               const TVector3& _krB,
@@ -42,6 +71,16 @@ TVector3& Add(const TVector3& _krA,
 }
 
 // -Lance
+TVector2& Add(const TVector2& _krA,
+              const TVector2& _krB,
+              TVector2& _rResultant)
+{
+	_rResultant.m_fX = _krA.m_fX + _krB.m_fX;
+	_rResultant.m_fY = _krA.m_fY + _krB.m_fY;
+	return _rResultant;
+}
+
+// -Lance
 TVector3& Subtract(const TVector3& _krA,
                    const TVector3& _krB,
                    TVector3& _rResultant)
@@ -49,6 +88,16 @@ TVector3& Subtract(const TVector3& _krA,
 	_rResultant.m_fX = _krA.m_fX - _krB.m_fX;
 	_rResultant.m_fY = _krA.m_fY - _krB.m_fY;
 	_rResultant.m_fZ = _krA.m_fZ - _krB.m_fZ;
+	return _rResultant;
+}
+
+// -Lance
+TVector2& Subtract(const TVector2& _krA,
+	const TVector2& _krB,
+	TVector2& _rResultant)
+{
+	_rResultant.m_fX = _krA.m_fX - _krB.m_fX;
+	_rResultant.m_fY = _krA.m_fY - _krB.m_fY;
 	return _rResultant;
 }
 
@@ -122,9 +171,9 @@ float ComputeAngleBetween(const TVector2& _krA,
 float ComputeAngleBetween(const TVector3& _krA,
 	const TVector3& _krB)
 {
-	float fADotB = _krA.m_fX * _krB.m_fX + _krA.m_fY * _krB.m_fY + _krA.m_fZ * _krB.m_fZ;
-	float fMagA = sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2) + pow(_krA.m_fZ, 2));
-	float fMagB = sqrt(pow(_krB.m_fX, 2) + pow(_krB.m_fY, 2) + pow(_krB.m_fZ, 2));
+	float fADotB = DotProduct(_krA, _krB);
+	float fMagA = Magnitude(_krA);
+	float fMagB = Magnitude(_krB);
 	return acos(fADotB / (fMagA * fMagB));
 }
 
@@ -165,7 +214,11 @@ float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	const TTriangle2& _krTriangle)
 {
-	return 0;
+	float fTriCentreX = (_krTriangle.m_v2p1.m_fX + _krTriangle.m_v2p2.m_fX + _krTriangle.m_v2p3.m_fX) / 3;
+	float fTriCentreY = (_krTriangle.m_v2p1.m_fY + _krTriangle.m_v2p2.m_fY + _krTriangle.m_v2p3.m_fY) / 3;
+	float fVDiffX = fTriCentreX - _krCircle.m_v2center.m_fX;
+	float fVDiffY = fTriCentreY - _krCircle.m_v2center.m_fY;
+	return sqrt(pow(fVDiffX, 2) + pow(fVDiffY, 2));
 }
 
 // -Seb
@@ -174,7 +227,52 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	TVector3& _rv3IntersectionPoint1,
 	TVector3& _rv3IntersectionPoint2)
 {
-	return INTERSECTION_NONE;
+	float fT1;
+	float fT2;
+	TVector3 Normalized = Normalise(_krLine.m_v3v, Normalized);
+	float fA = (_krLine.m_v3v.m_fX * _krLine.m_v3v.m_fX) + (_krLine.m_v3v.m_fY *_krLine.m_v3v.m_fY) + (_krLine.m_v3v.m_fZ*_krLine.m_v3v.m_fZ);
+
+	float fB = (2 * _krLine.m_v3v.m_fX * _krLine.m_v3q.m_fX) - (2 * _krLine.m_v3v.m_fX * _krSphere.m_v3center.m_fX) +
+		(2 * _krLine.m_v3v.m_fY * _krLine.m_v3q.m_fY) - (2 * _krLine.m_v3v.m_fY * _krSphere.m_v3center.m_fY) + 
+		(2 * _krLine.m_v3v.m_fZ * _krLine.m_v3q.m_fZ) - (2 * _krLine.m_v3v.m_fZ * _krSphere.m_v3center.m_fZ);
+
+	float fC = (_krLine.m_v3q.m_fX * _krLine.m_v3q.m_fX) + (_krSphere.m_v3center.m_fX * _krSphere.m_v3center.m_fX) - (2 * _krLine.m_v3q.m_fX * _krSphere.m_v3center.m_fX)+
+		(_krLine.m_v3q.m_fY * _krLine.m_v3q.m_fY) + (_krSphere.m_v3center.m_fY * _krSphere.m_v3center.m_fY) - (2 * _krLine.m_v3q.m_fY * _krSphere.m_v3center.m_fY)+
+		(_krLine.m_v3q.m_fZ * _krLine.m_v3q.m_fZ) + (_krSphere.m_v3center.m_fZ * _krSphere.m_v3center.m_fZ) - (2 * _krLine.m_v3q.m_fZ * _krSphere.m_v3center.m_fZ)
+		- (_krSphere.m_fRadius * _krSphere.m_fRadius);
+
+	// If the discriminant is negative
+	if ((fB * fB) - (4 * fA * fC) < 0)
+	{
+		return INTERSECTION_NONE;
+	}
+
+	// If there is one intersection (discriminant is 0)
+	if (AlmostEqual((fB * fB) - (4 * fA * fC), 0))
+	{
+		fT1 = -fB / (2 * fA);
+
+		_rv3IntersectionPoint1.m_fX = (_krLine.m_v3v.m_fX * fT1) + _krLine.m_v3q.m_fX;
+		_rv3IntersectionPoint1.m_fY = (_krLine.m_v3v.m_fY * fT1) + _krLine.m_v3q.m_fY;
+		_rv3IntersectionPoint1.m_fZ = (_krLine.m_v3v.m_fZ * fT1) + _krLine.m_v3q.m_fZ;
+
+		_rv3IntersectionPoint1 = _rv3IntersectionPoint2;
+
+		return INTERSECTION_ONE;
+	}
+
+	fT1 = (-fB / (2 * fA)) + sqrt((fB * fB) - ((4 * fA * fC))) / (2 * fA);
+	fT2 = (-fB / (2 * fA)) - sqrt((fB * fB) - ((4 * fA * fC))) / (2 * fA);
+
+	_rv3IntersectionPoint1.m_fX = (_krLine.m_v3v.m_fX * fT1) + _krLine.m_v3q.m_fX;
+	_rv3IntersectionPoint1.m_fY = (_krLine.m_v3v.m_fY * fT1) + _krLine.m_v3q.m_fY;
+	_rv3IntersectionPoint1.m_fZ = (_krLine.m_v3v.m_fZ * fT1) + _krLine.m_v3q.m_fZ;
+
+	_rv3IntersectionPoint2.m_fX = (_krLine.m_v3v.m_fX * fT2) + _krLine.m_v3q.m_fX;
+	_rv3IntersectionPoint2.m_fY = (_krLine.m_v3v.m_fY * fT2) + _krLine.m_v3q.m_fY;
+	_rv3IntersectionPoint2.m_fZ = (_krLine.m_v3v.m_fZ * fT2) + _krLine.m_v3q.m_fZ;
+
+	return INTERSECTION_TWO;
 }
 
 // -Jack
@@ -222,14 +320,31 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	const float _kfFieldOfViewInRadians,
 	const TVector2& _krObjectPosition)
 {
-	return false;
+	float fObjectThetaInRadians = atan2((_krObjectPosition.m_fY - _krCameraPosition.m_fY), (_krObjectPosition.m_fX - _krCameraPosition.m_fX));
+	float fCameraDirectionInRadians = atan2(_krCameraDirection.m_fY, _krCameraDirection.m_fX);
+
+	if (fObjectThetaInRadians >= (fCameraDirectionInRadians + _kfFieldOfViewInRadians / 2))
+	{
+		return false;
+	}
+	else if (fObjectThetaInRadians <= fCameraDirectionInRadians - (_kfFieldOfViewInRadians / 2))
+	{
+		return false;
+	}
+
+	return true;
 }
 
-// -Seb
+// -Lance
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
-	return _rNormal;
+	// Get surface normal vector with Counter Clockwise Winding
+	TVector3 v3TriSide1;
+	TVector3 v3TriSide2;
+	Subtract(_krTriangle.m_v3p2, _krTriangle.m_v3p1, v3TriSide1);
+	Subtract(_krTriangle.m_v3p3, _krTriangle.m_v3p1, v3TriSide2);
+	return CrossProduct(v3TriSide1, v3TriSide2, _rNormal);
 }
 
 // -Lance
@@ -237,7 +352,15 @@ bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	const TVector3& _krLightSourcePosition,
 	const TTriangle3& _krSurface)
 {
-	return false;
+	// Get vector to light source
+	TVector3 v3VecToLight;
+	Subtract(_krLightSourcePosition, _krPointOnSurface, v3VecToLight);
+	
+	// Get surface normal vector (Counter Clockwise Winding)
+	TVector3 v3SurNormal;
+	FindTriangleNormal(_krSurface, v3SurNormal);
+
+	return DotProduct(v3VecToLight, v3SurNormal) > 0;
 }
 
 // -Lance
@@ -246,5 +369,29 @@ TTriangle2& RotateTriangleAroundPoint(const TTriangle2& _krTriangle,
 	const TVector2& _krRotAroundPoint,
 	TTriangle2& _rRotatedTriangle)
 {
+	// Translate triange so that the rotation point is at origin
+	Subtract(_krTriangle.m_v2p1, _krRotAroundPoint, _rRotatedTriangle.m_v2p1);
+	Subtract(_krTriangle.m_v2p2, _krRotAroundPoint, _rRotatedTriangle.m_v2p2);
+	Subtract(_krTriangle.m_v2p3, _krRotAroundPoint, _rRotatedTriangle.m_v2p3);
+
+	// Rotate coordinate system
+	TVector2 v2I{ 1, 0 };
+	TVector2 v2J{ 0, 1 };
+	TVector2 v2IPrime{ v2I.m_fX * cos(_kfRotAngleInRadians), v2I.m_fX * sin(_kfRotAngleInRadians) };
+	TVector2 v2JPrime{ -v2J.m_fY * sin(_kfRotAngleInRadians), v2J.m_fY * cos(_kfRotAngleInRadians) };
+
+	// Place triangle points in new coordinate system
+	_rRotatedTriangle.m_v2p1.m_fX = _rRotatedTriangle.m_v2p1.m_fX * v2IPrime.m_fX + _rRotatedTriangle.m_v2p1.m_fY * v2JPrime.m_fX;
+	_rRotatedTriangle.m_v2p1.m_fY = _rRotatedTriangle.m_v2p1.m_fX * v2IPrime.m_fY + _rRotatedTriangle.m_v2p1.m_fY * v2JPrime.m_fY;
+	_rRotatedTriangle.m_v2p2.m_fX = _rRotatedTriangle.m_v2p2.m_fX * v2IPrime.m_fX + _rRotatedTriangle.m_v2p2.m_fY * v2JPrime.m_fX;
+	_rRotatedTriangle.m_v2p2.m_fY = _rRotatedTriangle.m_v2p2.m_fX * v2IPrime.m_fY + _rRotatedTriangle.m_v2p2.m_fY * v2JPrime.m_fY;
+	_rRotatedTriangle.m_v2p3.m_fX = _rRotatedTriangle.m_v2p3.m_fX * v2IPrime.m_fX + _rRotatedTriangle.m_v2p3.m_fY * v2JPrime.m_fX;
+	_rRotatedTriangle.m_v2p3.m_fY = _rRotatedTriangle.m_v2p3.m_fX * v2IPrime.m_fY + _rRotatedTriangle.m_v2p3.m_fY * v2JPrime.m_fY;
+
+	// Translate triangle such that the rotation point is restored to its original position
+	Add(_rRotatedTriangle.m_v2p1, _krRotAroundPoint, _rRotatedTriangle.m_v2p1);
+	Add(_rRotatedTriangle.m_v2p2, _krRotAroundPoint, _rRotatedTriangle.m_v2p2);
+	Add(_rRotatedTriangle.m_v2p3, _krRotAroundPoint, _rRotatedTriangle.m_v2p3);
+
 	return _rRotatedTriangle;
 }
