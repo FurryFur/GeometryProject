@@ -122,9 +122,9 @@ float ComputeAngleBetween(const TVector2& _krA,
 float ComputeAngleBetween(const TVector3& _krA,
 	const TVector3& _krB)
 {
-	float fADotB = _krA.m_fX * _krB.m_fX + _krA.m_fY * _krB.m_fY + _krA.m_fZ * _krB.m_fZ;
-	float fMagA = sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2) + pow(_krA.m_fZ, 2));
-	float fMagB = sqrt(pow(_krB.m_fX, 2) + pow(_krB.m_fY, 2) + pow(_krB.m_fZ, 2));
+	float fADotB = DotProduct(_krA, _krB);
+	float fMagA = Magnitude(_krA);
+	float fMagB = Magnitude(_krB);
 	return acos(fADotB / (fMagA * fMagB));
 }
 
@@ -167,10 +167,8 @@ float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 {
 	float fTriCentreX = (_krTriangle.m_v2p1.m_fX + _krTriangle.m_v2p2.m_fX + _krTriangle.m_v2p3.m_fX) / 3;
 	float fTriCentreY = (_krTriangle.m_v2p1.m_fY + _krTriangle.m_v2p2.m_fY + _krTriangle.m_v2p3.m_fY) / 3;
-	float fCircleCentreX = _krCircle.m_v2center.m_fX;
-	float fCircleCentreY = _krCircle.m_v2center.m_fY;
-	float fVDiffX = fTriCentreX - fCircleCentreX;
-	float fVDiffY = fTriCentreY - fCircleCentreY;
+	float fVDiffX = fTriCentreX - _krCircle.m_v2center.m_fX;
+	float fVDiffY = fTriCentreY - _krCircle.m_v2center.m_fY;
 	return sqrt(pow(fVDiffX, 2) + pow(fVDiffY, 2));
 }
 
@@ -219,7 +217,12 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
-	return _rNormal;
+	// Get surface normal vector with Counter Clockwise Winding
+	TVector3 v3TriSide1;
+	TVector3 v3TriSide2;
+	Subtract(_krTriangle.m_v3p2, _krTriangle.m_v3p1, v3TriSide1);
+	Subtract(_krTriangle.m_v3p3, _krTriangle.m_v3p1, v3TriSide2);
+	return CrossProduct(v3TriSide1, v3TriSide2, _rNormal);
 }
 
 // -Lance
@@ -233,11 +236,7 @@ bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	
 	// Get surface normal vector (Counter Clockwise Winding)
 	TVector3 v3SurNormal;
-	TVector3 v3TriSide1;
-	TVector3 v3TriSide2;
-	Subtract(_krSurface.m_v3p2, _krSurface.m_v3p1, v3TriSide1);
-	Subtract(_krSurface.m_v3p3, _krSurface.m_v3p1, v3TriSide2);
-	CrossProduct(v3TriSide1, v3TriSide2, v3SurNormal);
+	FindTriangleNormal(_krSurface, v3SurNormal);
 
 	return DotProduct(v3VecToLight, v3SurNormal) > 0;
 }
