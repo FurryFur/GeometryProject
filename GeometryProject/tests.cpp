@@ -87,7 +87,7 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		TVector3 rReturnedVal = Normalise(TVector3{ 3, 0, 0 }, rResultant);
 		REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
 		REQUIRE(Equals(rResultant, rReturnedVal));
-	}*/
+	}
 
 	SECTION("Test ComputeLineSphereIntersection Function")
 	{
