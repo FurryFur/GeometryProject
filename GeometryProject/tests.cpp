@@ -98,4 +98,11 @@ TEST_CASE("Test Equality Function") {
 		float fReturnVal = ComputeDistanceCircleToCircle(TCircle{ { 2, 5 }, 4 }, TCircle{ { -4, -6 }, 8 });
 		REQUIRE(fReturnVal == Approx(sqrt(157)));
 	}
+
+	SECTION("Test Compute Is Line Plane Intersection Function")
+	{
+		TVector3 _rv3IntersectionPoint;
+		bool fReturnVal = IsLinePlaneIntersection(T3DLine{ { 1, 0, 1, }, { 3, -2, 1 } }, TPlane{ { 1, 1, 1, }, { -3, -2, -1 } }, _rv3IntersectionPoint);
+		REQUIRE(fReturnVal == true);
+	}
 }
