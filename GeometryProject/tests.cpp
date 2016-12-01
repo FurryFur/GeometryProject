@@ -97,7 +97,6 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 			rIntersectionPoint1, rIntersectionPoint2);
 		REQUIRE(Equals(rIntersectionPoint1, TVector3{ 2, 1, 0 }));
 		REQUIRE(Equals(rIntersectionPoint2, TVector3{ -2, 1, 0 }));
-		//REQUIRE(Equals(rReturnedVal, INTERSECTION_TWO));
 	}
 
 	SECTION("Test ComputeAngleBetween Function for 2D Vectors")
@@ -173,5 +172,13 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		REQUIRE(Equals(t2RotatedTri.m_v2p1, { 1, 0 }));
 		REQUIRE(Equals(t2RotatedTri.m_v2p2, { 0, -1 }));
 		REQUIRE(Equals(t2RotatedTri.m_v2p3, { -1, 0 }));
+	}
+
+	SECTION("Test ComputeDistancePointToSphere Function")
+	{
+		TVector3 v3Point{ 1, 1, 4 };
+		TSphere sSphere{ TVector3 { 1, 1, 0}, 2 };
+		float fValue = ComputeDistancePointToSphere(sSphere, v3Point);
+		REQUIRE(fValue == Approx(4.0f));
 	}
 }
