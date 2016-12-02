@@ -3,10 +3,10 @@
 #include "geometry.h"
 
 // -Lance
-bool AlmostEqual(const float _kfA, const float _kfB, const float _kfMaxAbsDiff = std::numeric_limits<float>::epsilon() * 2)
+bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = std::numeric_limits<float>::epsilon() * 2)
 {
 	float fDiff = abs(_kfA - _kfB);
-	if (fDiff <= _kfMaxAbsDiff)
+	if (fDiff <= _fMaxAbsDiff)
 	{
 		return true;
 	}
