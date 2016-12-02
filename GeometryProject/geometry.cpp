@@ -2,40 +2,11 @@
 #include <algorithm>
 #include "geometry.h"
 
-#include <stdint.h> // For int32_t, etc.
-
-// Reference: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
-union Float_t
-{
-	Float_t(float num = 0.0f) : f(num) {}
-	// Portable extraction of components.
-	bool Negative() const { return i < 0; }
-
-	int32_t i;
-	float f;
-};
-
 // -Lance
-// Reference: https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/
-bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = std::numeric_limits<float>::epsilon() * 10, const int _iMaxULPs = 1)
+bool AlmostEqual(const float _kfA, const float _kfB, const float _kfMaxAbsDiff = std::numeric_limits<float>::epsilon() * 2)
 {
-	// When comparing numbers near zero
 	float fDiff = abs(_kfA - _kfB);
-	if (fDiff <= _fMaxAbsDiff)
-	{
-		return true;
-	}
-
-	Float_t uA(_kfA);
-	Float_t uB(_kfB);
-
-	if (uA.Negative() != uB.Negative())
-	{
-		return false;
-	}
-
-	int iULPsDiff = abs(uA.i - uB.i);
-	if (iULPsDiff <= _iMaxULPs)
+	if (fDiff <= _kfMaxAbsDiff)
 	{
 		return true;
 	}
