@@ -157,7 +157,7 @@ float ComputeDistancePointToLine(const T3DLine& _krLine,
 	return Magnitude(CrossProduct(_rPointtoLine, _krLine.m_v3v, _rResultant)) / Magnitude(_krLine.m_v3v);
 }
 
-// -Seb
+// -Shawn
 float ComputeDistancePointToPlane(const TPlane& _krPlane,
 	const TVector3& _krPoint)
 {
@@ -269,14 +269,14 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	}
 }
 
-// -Jack
+// -Shawn
 bool IsIntersection(const T3DLine& _krLine1,
 	const T3DLine& _krLine2)
 {
 	return false;
 }
 
-// -Jack
+// -Shawn
 TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	const T3DLine& _krLine2,
 	TVector3& _rIntersectionPoint)
