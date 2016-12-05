@@ -2,7 +2,7 @@
 #include <algorithm>
 #include "geometry.h"
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = std::numeric_limits<float>::epsilon() * 2)
 {
 	float fDiff = abs(_kfA - _kfB);
@@ -16,7 +16,7 @@ bool AlmostEqual(const float _kfA, const float _kfB, const float _fMaxAbsDiff = 
 	}
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 bool Equals(const TVector3& _krA, const TVector3& _krB)
 {
 	return AlmostEqual(_krA.m_fX, _krB.m_fX) && 
@@ -30,7 +30,7 @@ bool Equals(const TVector2& _krA, const TVector2& _krB)
            AlmostEqual(_krA.m_fY, _krB.m_fY);
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 TVector3& Add(const TVector3& _krA,
               const TVector3& _krB,
               TVector3& _rResultant)
@@ -41,7 +41,7 @@ TVector3& Add(const TVector3& _krA,
 	return _rResultant;
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 TVector2& Add(const TVector2& _krA,
               const TVector2& _krB,
               TVector2& _rResultant)
@@ -51,7 +51,7 @@ TVector2& Add(const TVector2& _krA,
 	return _rResultant;
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 TVector3& Subtract(const TVector3& _krA,
                    const TVector3& _krB,
                    TVector3& _rResultant)
@@ -62,7 +62,7 @@ TVector3& Subtract(const TVector3& _krA,
 	return _rResultant;
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 TVector2& Subtract(const TVector2& _krA,
 	const TVector2& _krB,
 	TVector2& _rResultant)
@@ -72,7 +72,7 @@ TVector2& Subtract(const TVector2& _krA,
 	return _rResultant;
 }
 
-// -Seb
+// -Seb / Jack, Lance, Shawn
 TVector3& ScaleVector(const TVector3& _krA,
 	const float _kfScalar,
 	TVector3& _rResultant)
@@ -83,19 +83,19 @@ TVector3& ScaleVector(const TVector3& _krA,
 	return _rResultant;
 }
 
-// -Jack
+// -Jack / Lance, Seb, Shawn
 float Magnitude(const TVector3& _krA)
 {
 	return sqrt(pow(_krA.m_fX, 2) + pow(_krA.m_fY, 2) + pow(_krA.m_fZ, 2));
 }
 
-// -Jack
+// -Jack / Lance, Seb, Shawn
 float DotProduct(const TVector3& _krA, const TVector3& _krB)
 {
 	return ((_krA.m_fX * _krB.m_fX) + (_krA.m_fY * _krB.m_fY) + (_krA.m_fZ * _krB.m_fZ));
 }
 
-// -Seb
+// -Seb / Jack, Lance, Shawn
 TVector3& CrossProduct(const TVector3& _krA,
 	const TVector3& _krB,
 	TVector3& _rResultant)
@@ -106,7 +106,7 @@ TVector3& CrossProduct(const TVector3& _krA,
 	return _rResultant;
 }
 
-// -Seb
+// -Seb / Jack, Lance, Shawn
 TVector3& Normalise(const TVector3& _krA, TVector3& _rResultant)
 {
 	float fMag = Magnitude(_krA);
@@ -116,7 +116,7 @@ TVector3& Normalise(const TVector3& _krA, TVector3& _rResultant)
 	return _rResultant;
 }
 
-// -Jack
+// -Jack / Lance, Seb, Shawn
 TVector3& Projection(const TVector3& _krA,
 	const TVector3& _krB,
 	TVector3& _rResultant)
@@ -128,7 +128,7 @@ TVector3& Projection(const TVector3& _krA,
 	return _rResultant;
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 float ComputeAngleBetween(const TVector2& _krA,
 	const TVector2& _krB)
 {
@@ -138,7 +138,7 @@ float ComputeAngleBetween(const TVector2& _krA,
 	return acos(fADotB / ( fMagA * fMagB));
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 float ComputeAngleBetween(const TVector3& _krA,
 	const TVector3& _krB)
 {
@@ -148,23 +148,28 @@ float ComputeAngleBetween(const TVector3& _krA,
 	return acos(fADotB / (fMagA * fMagB));
 }
 
-// -Jack
+// -Jack / Lance, Seb, Shawn
 float ComputeDistancePointToLine(const T3DLine& _krLine,
 	const TVector3& _krPoint)
 {
-	TVector3 _rResultant;
-	TVector3 _rPointtoLine = { (_krPoint.m_fX - _krLine.m_v3q.m_fX), (_krPoint.m_fY - _krLine.m_v3q.m_fY), (_krPoint.m_fZ - _krLine.m_v3q.m_fZ) };
-	return Magnitude(CrossProduct(_rPointtoLine, _krLine.m_v3v, _rResultant)) / Magnitude(_krLine.m_v3v);
+	TVector3 resultant;
+	TVector3 pointtoLine = { (_krPoint.m_fX - _krLine.m_v3q.m_fX), (_krPoint.m_fY - _krLine.m_v3q.m_fY), (_krPoint.m_fZ - _krLine.m_v3q.m_fZ) };
+	return Magnitude(CrossProduct(pointtoLine, _krLine.m_v3v, resultant)) / Magnitude(_krLine.m_v3v);
 }
 
-// -Shawn
+// -Jack / Lance, Seb, Shawn
 float ComputeDistancePointToPlane(const TPlane& _krPlane,
 	const TVector3& _krPoint)
 {
-	return 0;
+	T3DLine line{ _krPoint, _krPlane.m_v3normal };
+	TVector3 v3IntersectionPoint;
+	IsLinePlaneIntersection(line, _krPlane, v3IntersectionPoint);
+	TVector3 v3DifVector;
+	Subtract(v3IntersectionPoint, _krPoint, v3DifVector);
+	return Magnitude(v3DifVector);
 }
 
-// -Seb
+// -Seb / Jack, Lance, Shawn
 //Distance between point and center of the spheres
 float ComputeDistancePointToSphere(const TSphere& _krSphere,
 	const TVector3& _krPoint)
@@ -174,7 +179,7 @@ float ComputeDistancePointToSphere(const TSphere& _krSphere,
 		(_krSphere.m_v3center.m_fZ - _krPoint.m_fZ) * (_krSphere.m_v3center.m_fZ - _krPoint.m_fZ));
 }
 
-// -Jack
+// -Jack / Lance, Seb, Shawn
 //Distance between center of the circles
 float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 	const TCircle& _krCircle2)
@@ -182,7 +187,7 @@ float ComputeDistanceCircleToCircle(const TCircle& _krCircle1,
 	return sqrt(pow((_krCircle1.m_v2center.m_fX - _krCircle2.m_v2center.m_fX), 2) + pow((_krCircle1.m_v2center.m_fY - _krCircle2.m_v2center.m_fY), 2));
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 //Distance between center of the circle and triangle
 float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	const TTriangle2& _krTriangle)
@@ -194,7 +199,7 @@ float ComputeDistanceCircleToTriangle(const TCircle& _krCircle,
 	return sqrt(pow(fVDiffX, 2) + pow(fVDiffY, 2));
 }
 
-// -Seb
+// -Seb / Jack, Lance, Shawn
 EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	const TSphere& _krSphere,
 	TVector3& _rv3IntersectionPoint1,
@@ -248,7 +253,7 @@ EIntersections ComputeLineSphereIntersection(const T3DLine& _krLine,
 	return INTERSECTION_TWO;
 }
 
-// -Jack / Lance
+// -Jack -Lance / Seb, Shawn
 bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	const TPlane& _krPlane,
 	TVector3& _rv3IntersectionPoint)
@@ -269,14 +274,14 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	}
 }
 
-// -Shawn
+// -Shawn / Jack, Lance, Seb
 bool IsIntersection(const T3DLine& _krLine1,
 	const T3DLine& _krLine2)
 {
 	return false;
 }
 
-// -Shawn
+// -Shawn / Jack, Lance, Seb
 TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	const T3DLine& _krLine2,
 	TVector3& _rIntersectionPoint)
@@ -284,7 +289,7 @@ TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	return _rIntersectionPoint;
 }
 
-// -Seb
+// -Seb / Jack, Lance, Shawn
 bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	const TVector2& _krCameraDirection,
 	const float _kfFieldOfViewInRadians,
@@ -305,7 +310,7 @@ bool IsInFieldOfView(const TVector2& _krCameraPosition,
 	return true;
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	TVector3& _rNormal)
 {
@@ -317,7 +322,7 @@ TVector3& FindTriangleNormal(const TTriangle3& _krTriangle,
 	return CrossProduct(v3TriSide1, v3TriSide2, _rNormal);
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	const TVector3& _krLightSourcePosition,
 	const TTriangle3& _krSurface)
@@ -333,7 +338,7 @@ bool IsSurfaceLit(const TVector3& _krPointOnSurface,
 	return DotProduct(v3VecToLight, v3SurNormal) > 0;
 }
 
-// -Lance
+// -Lance / Jack, Seb, Shawn
 TTriangle2& RotateTriangleAroundPoint(const TTriangle2& _krTriangle,
 	const float _kfRotAngleInRadians,
 	const TVector2& _krRotAroundPoint,

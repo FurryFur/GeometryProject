@@ -185,9 +185,17 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 	SECTION("Test Compute Is Line Plane Intersection Function")
 	{
 		TVector3 v3IntersectionPoint;
-		bool fReturnVal = IsLinePlaneIntersection(T3DLine{ { 0, -1, 0, }, { 0, 1, 0 } }, TPlane{ { 0, 1, 0, }, { 1, 0, 0 } }, v3IntersectionPoint);
-		bool fReturnVal2 = IsLinePlaneIntersection(T3DLine{ { 0, -1, 0, }, { 1, 0, 0 } }, TPlane{ { 0, 1, 0, }, { 1, 0, 0 } }, v3IntersectionPoint);
-		REQUIRE(fReturnVal == true);
-		REQUIRE(fReturnVal2 == false);
+		bool bReturnVal = IsLinePlaneIntersection(T3DLine{ { 0, -1, 0, }, { 0, 1, 0 } }, TPlane{ { 0, 1, 0, }, { 1, 0, 0 } }, v3IntersectionPoint);
+		bool bReturnVal2 = IsLinePlaneIntersection(T3DLine{ { 0, -1, 0, }, { 1, 0, 0 } }, TPlane{ { 0, 1, 0, }, { 1, 0, 0 } }, v3IntersectionPoint);
+		REQUIRE(bReturnVal == true);
+		REQUIRE(bReturnVal2 == false);
+	}
+
+	SECTION("Test Compute Distance from Point to Plane Function")
+	{
+		TPlane plane{ {-1, 0, 0}, {1, 0, 0} };
+		TVector3 v3Point{3, 0, 0};
+		float fReturnVal = ComputeDistancePointToPlane(plane, v3Point);
+		REQUIRE(fReturnVal == Approx(2.0f));
 	}
 }
