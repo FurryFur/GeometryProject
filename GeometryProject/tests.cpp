@@ -198,4 +198,17 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		float fReturnVal = ComputeDistancePointToPlane(plane, v3Point);
 		REQUIRE(fReturnVal == Approx(2.0f));
 	}
+
+	SECTION("Test 3Dlines isintersection")
+	{
+		
+		bool breturnTF1 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ {1,0,0}, { 1, 0, 0 } },);
+		bool breturnTF2 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } });
+		REQUIRE(breturnTF1 == true);
+	
+		
+	}
+
+
 }
+
