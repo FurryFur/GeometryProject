@@ -278,14 +278,45 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 bool IsIntersection(const T3DLine& _krLine1,
 	const T3DLine& _krLine2)
 {
-	return false;
+
+	float fScalA = _krLine1.m_v3v.m_fX / _krLine2.m_v3v.m_fX;
+	float fScalB = _krLine1.m_v3v.m_fY / _krLine2.m_v3v.m_fY;
+	float fCrossX = ((_krLine1.m_v3v.m_fZ*_krLine2.m_v3v.m_fZ) - (_krLine2.m_v3v.m_fY*_krLine1.m_v3v.m_fZ));
+	float fCrossY = ((_krLine1.m_v3v.m_fZ*_krLine2.m_v3v.m_fX) - (_krLine2.m_v3v.m_fZ*_krLine1.m_v3v.m_fX));
+	float fCrossZ = ((_krLine1.m_v3v.m_fX*_krLine2.m_v3v.m_fY) - (_krLine2.m_v3v.m_fX*_krLine1.m_v3v.m_fY));
+	float fNewVectorX = (_krLine2.m_v3q.m_fX - _krLine1.m_v3v.m_fX);
+	float fNewVectorY = (_krLine2.m_v3q.m_fY - _krLine1.m_v3v.m_fY);
+	float fNewVectorZ = (_krLine2.m_v3q.m_fZ - _krLine1.m_v3v.m_fZ);
+	float fSkalar = ((fCrossX*fNewVectorX) + (fCrossY*fNewVectorX) + (fCrossY*fNewVectorY) + (fCrossZ*fNewVectorZ));
+	if (fScalA == fScalB)
+	{
+		return false;
+
+	}
+
+	else {
+
+		if (fSkalar == 0) {
+			return true;
+		}
+
+		else { return false; }
+	}
+
+
+
 }
 
 // -Shawn / Jack, Lance, Seb
 TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	const T3DLine& _krLine2,
 	TVector3& _rIntersectionPoint)
+	//let inbtersectoion point is P then |R1P| = t1,|R2P| = t2 , ?R1R2P,t1/sin?1 = t2/sin?2 = |R1R2|/sin?3 |v1×v2| = sin?3 , (R1-R2)×v2 = t1(v2×v1)&|(R1-R2)×v2| = |R1R2|sin?1 then t1 = (R1-R2)×v2/(v2×v1) & t2 = (R2-R1)×v1/(v1×v2) , then put t1 or t2 back to P
+
 {
+	_rIntersectionPoint.m_fX = (((_krLine2.m_v3q.m_fX - _krLine1.m_v3q.m_fX)*_krLine1.m_v3v.m_fX) / (_krLine1.m_v3v.m_fX*_krLine2.m_v3v.m_fX));
+	_rIntersectionPoint.m_fY = (((_krLine2.m_v3q.m_fY - _krLine1.m_v3q.m_fY)*_krLine1.m_v3v.m_fY) / (_krLine1.m_v3v.m_fX*_krLine2.m_v3v.m_fY));
+	_rIntersectionPoint.m_fZ = (((_krLine2.m_v3q.m_fZ - _krLine1.m_v3q.m_fZ)*_krLine1.m_v3v.m_fZ) / (_krLine1.m_v3v.m_fZ*_krLine2.m_v3v.m_fZ));
 	return _rIntersectionPoint;
 }
 
