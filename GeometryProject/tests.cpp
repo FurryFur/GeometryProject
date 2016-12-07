@@ -199,16 +199,12 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		REQUIRE(fReturnVal == Approx(2.0f));
 	}
 
-	SECTION("Test 3Dlines isintersection")
+	SECTION("Test 3D lines IsIntersection")
 	{
-		
-		bool breturnTF1 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ {1,0,0}, { 1, 0, 0 } },);
-		bool breturnTF2 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } });
+		bool breturnTF1 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 1 ,0 }, { 0, 1, 0 } });
+		bool breturnTF2 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } });
 		REQUIRE(breturnTF1 == true);
-	
-		
+		REQUIRE(breturnTF2 == false);
 	}
-
-
 }
 
