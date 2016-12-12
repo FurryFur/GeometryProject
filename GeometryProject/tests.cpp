@@ -206,5 +206,13 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		REQUIRE(breturnTF1 == true);
 		REQUIRE(breturnTF2 == false);
 	}
+
+	SECTION("Test ComputeIntersectionBetweenLines")
+	{
+		TVector3 v3Intersection;
+		TVector3 v3ReturnVal = ComputeIntersectionBetweenLines(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 1, 0 }, { 0, 1, 0 } }, v3Intersection);
+		REQUIRE(Equals(v3Intersection, v3ReturnVal));
+		REQUIRE(Equals(v3Intersection, TVector3{ 0, 0 }));
+	}
 }
 
