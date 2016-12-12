@@ -314,9 +314,32 @@ TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 	//let inbtersectoion point is P then |R1P| = t1,|R2P| = t2 , ?R1R2P,t1/sin?1 = t2/sin?2 = |R1R2|/sin?3 |v1×v2| = sin?3 , (R1-R2)×v2 = t1(v2×v1)&|(R1-R2)×v2| = |R1R2|sin?1 then t1 = (R1-R2)×v2/(v2×v1) & t2 = (R2-R1)×v1/(v1×v2) , then put t1 or t2 back to P
 
 {
-	_rIntersectionPoint.m_fX = (((_krLine2.m_v3q.m_fX - _krLine1.m_v3q.m_fX)*_krLine1.m_v3v.m_fX) / (_krLine1.m_v3v.m_fX*_krLine2.m_v3v.m_fX));
-	_rIntersectionPoint.m_fY = (((_krLine2.m_v3q.m_fY - _krLine1.m_v3q.m_fY)*_krLine1.m_v3v.m_fY) / (_krLine1.m_v3v.m_fX*_krLine2.m_v3v.m_fY));
-	_rIntersectionPoint.m_fZ = (((_krLine2.m_v3q.m_fZ - _krLine1.m_v3q.m_fZ)*_krLine1.m_v3v.m_fZ) / (_krLine1.m_v3v.m_fZ*_krLine2.m_v3v.m_fZ));
+	float fDenominator1 = _krLine2.m_v3v.m_fX * _krLine1.m_v3v.m_fY - _krLine1.m_v3v.m_fX * _krLine2.m_v3v.m_fY;
+	float fDenominator2 = _krLine2.m_v3v.m_fX * _krLine1.m_v3v.m_fZ - _krLine1.m_v3v.m_fX * _krLine2.m_v3v.m_fZ;
+	float fDenominator3 = _krLine2.m_v3v.m_fY * _krLine1.m_v3v.m_fZ - _krLine1.m_v3v.m_fY * _krLine2.m_v3v.m_fZ;
+
+	float fT;
+	if (!AlmostEqual(fDenominator1, 0))
+	{
+		fT = (_krLine2.m_v3v.m_fX * (_krLine2.m_v3q.m_fY - _krLine1.m_v3q.m_fY) + _krLine2.m_v3v.m_fY * (_krLine1.m_v3q.m_fX - _krLine2.m_v3q.m_fX)) / fDenominator1;
+	}
+	else if (!AlmostEqual(fDenominator2, 0))
+	{
+		fT = (_krLine2.m_v3v.m_fX * (_krLine2.m_v3q.m_fZ - _krLine1.m_v3q.m_fZ) + _krLine2.m_v3v.m_fZ * (_krLine1.m_v3q.m_fX - _krLine2.m_v3q.m_fX)) / fDenominator2;
+	}
+	else if (!AlmostEqual(fDenominator3, 0))
+	{
+		fT = (_krLine2.m_v3v.m_fY * (_krLine2.m_v3q.m_fZ - _krLine1.m_v3q.m_fZ) + _krLine2.m_v3v.m_fZ * (_krLine1.m_v3q.m_fY - _krLine2.m_v3q.m_fY)) / fDenominator3;
+	}
+	else
+	{
+		return _rIntersectionPoint;
+	}
+
+	_rIntersectionPoint.m_fX = _krLine1.m_v3q.m_fX + fT * _krLine1.m_v3v.m_fX;
+	_rIntersectionPoint.m_fY = _krLine1.m_v3q.m_fY + fT * _krLine1.m_v3v.m_fY;
+	_rIntersectionPoint.m_fZ = _krLine1.m_v3q.m_fY + fT * _krLine1.m_v3v.m_fY;
+
 	return _rIntersectionPoint;
 }
 
