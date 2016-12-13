@@ -101,7 +101,7 @@ TVector3& CrossProduct(const TVector3& _krA,
 	TVector3& _rResultant)
 {
 	_rResultant.m_fX = (_krA.m_fY * _krB.m_fZ) - (_krA.m_fZ * _krB.m_fY);
-	_rResultant.m_fY = (_krA.m_fX * _krB.m_fZ) - (_krA.m_fZ * _krB.m_fX);
+	_rResultant.m_fY = (_krA.m_fZ * _krB.m_fX) - (_krA.m_fX * _krB.m_fZ);
 	_rResultant.m_fZ = (_krA.m_fX * _krB.m_fY) - (_krA.m_fY * _krB.m_fX);
 	return _rResultant;
 }

@@ -75,8 +75,20 @@ TEST_CASE("Test Scale Function")
 TEST_CASE("Test CrossProduct Function")
 {
 	TVector3 rResultant;
-	TVector3 rReturnedVal = CrossProduct(TVector3{ 3, 2, 2 }, TVector3{ 4, 5, 6 }, rResultant);
-	REQUIRE(Equals(rResultant, TVector3{ 2, 10, 7 }));
+	TVector3 rReturnedVal = CrossProduct(TVector3{ 1, 0, 0 }, TVector3{ 0, 1, 0 }, rResultant);
+	REQUIRE(Equals(rResultant, TVector3{ 0, 0, 1 }));
+	REQUIRE(Equals(rResultant, rReturnedVal));
+
+	rReturnedVal = CrossProduct(TVector3{ 1, 0, 0 }, TVector3{ 0, 0, 1 }, rResultant);
+	REQUIRE(Equals(rResultant, TVector3{ 0, -1, 0 }));
+	REQUIRE(Equals(rResultant, rReturnedVal));
+
+	rReturnedVal = CrossProduct(TVector3{ 0, 1, 0 }, TVector3{ 0, 0, 1 }, rResultant);
+	REQUIRE(Equals(rResultant, TVector3{ 1, 0, 0 }));
+	REQUIRE(Equals(rResultant, rReturnedVal));
+
+	rReturnedVal = CrossProduct(TVector3{ 0, 1, 0 }, TVector3{ 1, 0, 0 }, rResultant);
+	REQUIRE(Equals(rResultant, TVector3{ 0, 0, -1 }));
 	REQUIRE(Equals(rResultant, rReturnedVal));
 }
 
