@@ -213,6 +213,14 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		TVector3 v3ReturnVal = ComputeIntersectionBetweenLines(T3DLine{ { 0, 1, 0 }, { 0, 0, 1 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } }, v3Intersection);
 		REQUIRE(Equals(v3Intersection, v3ReturnVal));
 		REQUIRE(Equals(v3Intersection, TVector3{ 0, 1, 1 }));
+
+		v3ReturnVal = ComputeIntersectionBetweenLines(T3DLine{ { 0, 0, 1 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 0, 0, 1 } }, v3Intersection);
+		REQUIRE(Equals(v3Intersection, v3ReturnVal));
+		REQUIRE(Equals(v3Intersection, TVector3{ 1, 0, 1 }));
+
+		v3ReturnVal = ComputeIntersectionBetweenLines(T3DLine{ { 1, 0, 0 }, { 0, 1, 0 } }, T3DLine{ { 0, 1, 0 }, { 1, 0, 0 } }, v3Intersection);
+		REQUIRE(Equals(v3Intersection, v3ReturnVal));
+		REQUIRE(Equals(v3Intersection, TVector3{ 1, 1, 0 }));
 	}
 }
 

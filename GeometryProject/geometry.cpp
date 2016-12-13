@@ -276,7 +276,7 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 
 // -Shawn / Jack, Lance, Seb
 bool IsIntersection(const T3DLine& _krLine1,
-	const T3DLine& _krLine2)
+                    const T3DLine& _krLine2)
 {
 
 	float fScalA = _krLine1.m_v3v.m_fX / _krLine2.m_v3v.m_fX;
@@ -302,34 +302,33 @@ bool IsIntersection(const T3DLine& _krLine1,
 
 		else { return false; }
 	}
-
-
-
 }
 
-// -Shawn / Jack, Lance, Seb
+// -Lance / Shawn, Jack, Seb
 TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
-	const T3DLine& _krLine2,
-	TVector3& _rIntersectionPoint)
-	//let inbtersectoion point is P then |R1P| = t1,|R2P| = t2 , ?R1R2P,t1/sin?1 = t2/sin?2 = |R1R2|/sin?3 |v1×v2| = sin?3 , (R1-R2)×v2 = t1(v2×v1)&|(R1-R2)×v2| = |R1R2|sin?1 then t1 = (R1-R2)×v2/(v2×v1) & t2 = (R2-R1)×v1/(v1×v2) , then put t1 or t2 back to P
-
+                                          const T3DLine& _krLine2,
+                                          TVector3& _rIntersectionPoint)
 {
-	float fDenominator1 = _krLine2.m_v3v.m_fX * _krLine1.m_v3v.m_fY - _krLine1.m_v3v.m_fX * _krLine2.m_v3v.m_fY;
-	float fDenominator2 = _krLine2.m_v3v.m_fX * _krLine1.m_v3v.m_fZ - _krLine1.m_v3v.m_fX * _krLine2.m_v3v.m_fZ;
-	float fDenominator3 = _krLine2.m_v3v.m_fY * _krLine1.m_v3v.m_fZ - _krLine1.m_v3v.m_fY * _krLine2.m_v3v.m_fZ;
+	TVector3 v3L1QCrossL2V;
+	TVector3 v3L2VCrossL2Q;
+	TVector3 v3L2VCrossL1V;
+	CrossProduct(_krLine1.m_v3q, _krLine2.m_v3v, v3L1QCrossL2V);
+	CrossProduct(_krLine2.m_v3v, _krLine2.m_v3q, v3L2VCrossL2Q);
+	CrossProduct(_krLine2.m_v3v, _krLine1.m_v3v, v3L2VCrossL1V);
 
+	// Work out 't' using formula with non-zero denominator
 	float fT;
-	if (!AlmostEqual(fDenominator1, 0))
+	if (!AlmostEqual(v3L2VCrossL1V.m_fX, 0))
 	{
-		fT = (_krLine2.m_v3v.m_fX * (_krLine2.m_v3q.m_fY - _krLine1.m_v3q.m_fY) + _krLine2.m_v3v.m_fY * (_krLine1.m_v3q.m_fX - _krLine2.m_v3q.m_fX)) / fDenominator1;
+		fT = (v3L1QCrossL2V.m_fX + v3L2VCrossL2Q.m_fX) / v3L2VCrossL1V.m_fX;
 	}
-	else if (!AlmostEqual(fDenominator2, 0))
+	else if (!AlmostEqual(v3L2VCrossL1V.m_fY, 0))
 	{
-		fT = (_krLine2.m_v3v.m_fX * (_krLine2.m_v3q.m_fZ - _krLine1.m_v3q.m_fZ) + _krLine2.m_v3v.m_fZ * (_krLine1.m_v3q.m_fX - _krLine2.m_v3q.m_fX)) / fDenominator2;
+		fT = (v3L1QCrossL2V.m_fY + v3L2VCrossL2Q.m_fY) / v3L2VCrossL1V.m_fY;
 	}
-	else if (!AlmostEqual(fDenominator3, 0))
+	else if (!AlmostEqual(v3L2VCrossL1V.m_fZ, 0))
 	{
-		fT = (_krLine2.m_v3v.m_fY * (_krLine2.m_v3q.m_fZ - _krLine1.m_v3q.m_fZ) + _krLine2.m_v3v.m_fZ * (_krLine1.m_v3q.m_fY - _krLine2.m_v3q.m_fY)) / fDenominator3;
+		fT = (v3L1QCrossL2V.m_fZ + v3L2VCrossL2Q.m_fZ) / v3L2VCrossL1V.m_fZ;
 	}
 	else
 	{
@@ -338,7 +337,7 @@ TVector3& ComputeIntersectionBetweenLines(const T3DLine& _krLine1,
 
 	_rIntersectionPoint.m_fX = _krLine1.m_v3q.m_fX + fT * _krLine1.m_v3v.m_fX;
 	_rIntersectionPoint.m_fY = _krLine1.m_v3q.m_fY + fT * _krLine1.m_v3v.m_fY;
-	_rIntersectionPoint.m_fZ = _krLine1.m_v3q.m_fY + fT * _krLine1.m_v3v.m_fY;
+	_rIntersectionPoint.m_fZ = _krLine1.m_v3q.m_fZ + fT * _krLine1.m_v3v.m_fZ;
 
 	return _rIntersectionPoint;
 }
