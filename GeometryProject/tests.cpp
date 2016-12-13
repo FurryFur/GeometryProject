@@ -217,17 +217,27 @@ TEST_CASE("Test 3D lines IsIntersection")
 {
 	bool breturnTF1 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 1 ,0 }, { 0, 1, 0 } });
 	bool breturnTF2 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } });
+	bool breturnTF3 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 1, 0 }, { 0, 0, 1 } });
+	bool breturnTF4 = IsIntersection(T3DLine{ { 0, 1, 0 }, { 0, 1, 0 } }, T3DLine{ { 1, 0, 0 }, { 0, 0, 1 } });
+	REQUIRE(breturnTF1 == true);
+	REQUIRE(breturnTF2 == false);
+	REQUIRE(breturnTF3 == false);
+	REQUIRE(breturnTF4 == false);
+
+	breturnTF1 = IsIntersection(T3DLine{ { 0, 1, 0 }, { 0, 0, 1 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } });
+	breturnTF2 = IsIntersection(T3DLine{ { 0, 1, 0 }, { 0, 0, 1 } }, T3DLine{ { 0, 0, 1 }, { 0, 0, 1 } });
 	REQUIRE(breturnTF1 == true);
 	REQUIRE(breturnTF2 == false);
 
-	bool bReturnVal = IsIntersection(T3DLine{ { 0, 1, 0 }, { 0, 0, 1 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } });
-	REQUIRE(bReturnVal == true);
+	breturnTF1 = IsIntersection(T3DLine{ { 0, 0, 1 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 0, 0, 1 } });
+	breturnTF2 = IsIntersection(T3DLine{ { 0, 0, 1 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } });
+	REQUIRE(breturnTF1 == true);
+	REQUIRE(breturnTF2 == false);
 
-	bReturnVal = IsIntersection(T3DLine{ { 0, 0, 1 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 0, 0, 1 } });
-	REQUIRE(bReturnVal == true);
-
-	bReturnVal = IsIntersection(T3DLine{ { 1, 0, 0 }, { 0, 1, 0 } }, T3DLine{ { 0, 1, 0 }, { 1, 0, 0 } });
-	REQUIRE(bReturnVal == true);
+	breturnTF1 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 0, 1, 0 } }, T3DLine{ { 0, 1, 0 }, { 1, 0, 0 } });
+	breturnTF2 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 0, 1, 0 } }, T3DLine{ { 0, 1, 0 }, { 0, 1, 0 } });
+	REQUIRE(breturnTF1 == true);
+	REQUIRE(breturnTF2 == false);
 }
 
 TEST_CASE("Test ComputeIntersectionBetweenLines")

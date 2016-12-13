@@ -274,34 +274,25 @@ bool IsLinePlaneIntersection(const T3DLine& _krLine,
 	}
 }
 
-// -Shawn / Jack, Lance, Seb
+// -Lance / Shawn, Jack, Seb
 bool IsIntersection(const T3DLine& _krLine1,
                     const T3DLine& _krLine2)
 {
-
-	float fScalA = _krLine1.m_v3v.m_fX / _krLine2.m_v3v.m_fX;
-	float fScalB = _krLine1.m_v3v.m_fY / _krLine2.m_v3v.m_fY;
-	float fCrossX = ((_krLine1.m_v3v.m_fZ*_krLine2.m_v3v.m_fZ) - (_krLine2.m_v3v.m_fY*_krLine1.m_v3v.m_fZ));
-	float fCrossY = ((_krLine1.m_v3v.m_fZ*_krLine2.m_v3v.m_fX) - (_krLine2.m_v3v.m_fZ*_krLine1.m_v3v.m_fX));
-	float fCrossZ = ((_krLine1.m_v3v.m_fX*_krLine2.m_v3v.m_fY) - (_krLine2.m_v3v.m_fX*_krLine1.m_v3v.m_fY));
-	float fNewVectorX = (_krLine2.m_v3q.m_fX - _krLine1.m_v3v.m_fX);
-	float fNewVectorY = (_krLine2.m_v3q.m_fY - _krLine1.m_v3v.m_fY);
-	float fNewVectorZ = (_krLine2.m_v3q.m_fZ - _krLine1.m_v3v.m_fZ);
-	float fSkalar = ((fCrossX*fNewVectorX) + (fCrossY*fNewVectorX) + (fCrossY*fNewVectorY) + (fCrossZ*fNewVectorZ));
-	if (fScalA == fScalB)
+	// Can we calculate an intersection
+	TVector3 v3L2VCrossL1V;
+	CrossProduct(_krLine2.m_v3v, _krLine1.m_v3v, v3L2VCrossL1V);
+	if (Equals(v3L2VCrossL1V, { 0, 0, 0 }))
 	{
 		return false;
-
 	}
 
-	else {
+	// Do the intersections match for both line equations
+	TVector3 v3Intersection1;
+	TVector3 v3Intersection2;
+	ComputeIntersectionBetweenLines(_krLine1, _krLine2, v3Intersection1);
+	ComputeIntersectionBetweenLines(_krLine2, _krLine1, v3Intersection2);
 
-		if (fSkalar == 0) {
-			return true;
-		}
-
-		else { return false; }
-	}
+	return Equals(v3Intersection1, v3Intersection2);
 }
 
 // -Lance / Shawn, Jack, Seb
