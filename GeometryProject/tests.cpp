@@ -205,6 +205,15 @@ TEST_CASE("Test Equality Functions for both 2D and 3D") {
 		bool breturnTF2 = IsIntersection(T3DLine{ { 1, 0, 0 }, { 1, 0, 0 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } });
 		REQUIRE(breturnTF1 == true);
 		REQUIRE(breturnTF2 == false);
+
+		bool bReturnVal = IsIntersection(T3DLine{ { 0, 1, 0 }, { 0, 0, 1 } }, T3DLine{ { 0, 0, 1 }, { 0, 1, 0 } });
+		REQUIRE(bReturnVal == true);
+
+		bReturnVal = IsIntersection(T3DLine{ { 0, 0, 1 }, { 1, 0, 0 } }, T3DLine{ { 1, 0, 0 }, { 0, 0, 1 } });
+		REQUIRE(bReturnVal == true);
+
+		bReturnVal = IsIntersection(T3DLine{ { 1, 0, 0 }, { 0, 1, 0 } }, T3DLine{ { 0, 1, 0 }, { 1, 0, 0 } });
+		REQUIRE(bReturnVal == true);
 	}
 
 	SECTION("Test ComputeIntersectionBetweenLines")
